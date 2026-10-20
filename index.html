@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>COME PRO Coach · Panel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f4f5f3;--surface:#ffffff;--surface2:#f4f8ef;--ink:#171a1d;--muted:#7b8389;--line:#e7e9e8;
+  --brand:#69b91f;--brand-text:#4f8d14;--brand-soft:#e9f4db;--on-brand:#0f1f08;--warn:#a87a00;--warn-soft:#fff4d6;--bad:#d95757;--bad-soft:#fbe6e6;--ok:#69b91f;
+  color-scheme:light;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#05070a;--surface:#0d120e;--surface2:#16240f;--ink:#f5f8f1;--muted:#aab4a6;--line:#273127;
+  --brand:#9be83f;--brand-text:#9be83f;--brand-soft:#16240f;--on-brand:#0f1f08;--warn:#ffc23d;--warn-soft:#2b2208;--bad:#ef7a7a;--bad-soft:#2e1414;--ok:#9be83f;color-scheme:dark;}}
+:root[data-theme="dark"]{
+  --bg:#05070a;--surface:#0d120e;--surface2:#16240f;--ink:#f5f8f1;--muted:#aab4a6;--line:#273127;
+  --brand:#9be83f;--brand-text:#9be83f;--brand-soft:#16240f;--on-brand:#0f1f08;--warn:#ffc23d;--warn-soft:#2b2208;--bad:#ef7a7a;--bad-soft:#2e1414;--ok:#9be83f;color-scheme:dark;}
+*{box-sizing:border-box;margin:0}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{background:var(--bg);color:var(--ink);font-family:'Plus Jakarta Sans',system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+button:focus-visible,input:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+.app{max-width:560px;margin:0 auto;padding:18px 16px 110px}
+header.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.coach{display:flex;gap:10px;align-items:center}
+.logo{width:38px;height:38px;border-radius:50%;background:var(--brand);color:var(--on-brand);display:grid;place-items:center;font-weight:800}
+.coach small{display:block;color:var(--muted);font-size:12px}
+.coach b{font-size:15px}
+h1{font-size:28px;font-weight:800;letter-spacing:-.02em;line-height:1.15}
+h2{font-size:17px;font-weight:700;margin:26px 0 10px}
+.sub{color:var(--muted);margin-top:4px}
+.summary{display:flex;gap:8px;margin-top:16px;overflow-x:auto}
+.chip{flex:none;padding:8px 12px;border-radius:999px;background:var(--surface);border:1px solid var(--line);font-size:13px;font-weight:600}
+.chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.list{background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.row{display:flex;gap:12px;align-items:center;padding:13px 14px;width:100%;text-align:left;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:0}
+.row:active{background:var(--surface2)}
+.ring{flex:none;position:relative;width:46px;height:46px}
+.ring svg{position:absolute;inset:0;transform:rotate(-90deg)}
+.ring span{position:absolute;inset:0;display:grid;place-items:center;font-weight:700;font-size:14px}
+.grow{flex:1;min-width:0}
+.name{font-weight:700}
+.meta{color:var(--muted);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tag{display:inline-block;font-size:12px;font-weight:700;padding:3px 8px;border-radius:6px}
+.t-warn{background:var(--warn-soft);color:var(--warn)}.t-bad{background:var(--bad-soft);color:var(--bad)}.t-ok{background:var(--brand-soft);color:var(--brand-text)}
+.act{flex:none;font-size:13px;font-weight:700;color:var(--brand-text);padding:8px 10px;border-radius:10px;background:var(--brand-soft)}
+.search{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;margin:14px 0 10px}
+nav.tabs{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px);z-index:20}
+nav.tabs div{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr)}
+nav.tabs button{padding:10px 0 12px;font-size:12px;font-weight:600;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:3px}
+nav.tabs button.on{color:var(--brand-text)}
+nav.tabs svg{width:22px;height:22px}
+.back{display:inline-flex;align-items:center;gap:4px;color:var(--brand-text);font-weight:700;margin-bottom:12px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px}
+.stat b{display:block;font-size:20px;font-weight:800}
+.stat small{color:var(--muted);font-size:12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px}
+.note{border-left:4px solid var(--warn);border-radius:0;background:var(--warn-soft);padding:10px 12px;font-size:14px;margin-top:12px}
+.days{display:grid;grid-template-columns:repeat(15,1fr);gap:4px;margin-top:10px}
+.days i{aspect-ratio:1;border-radius:4px;background:var(--line)}
+.days i.y{background:var(--brand)}.days i.n{background:var(--bad)}
+.meal{padding:12px 0;border-bottom:1px solid var(--line)}
+.meal:last-child{border-bottom:0}
+.meal h3{font-size:14px;font-weight:700;margin-bottom:6px}
+.foods{display:flex;flex-wrap:wrap;gap:6px}
+.food{padding:6px 10px;border-radius:10px;background:var(--surface2);border:1px solid var(--line);font-size:13px;font-weight:600}
+.food.changed{border-color:var(--brand);color:var(--brand-text);background:var(--brand-soft)}
+.hint{color:var(--muted);font-size:13px;margin-top:6px}
+.ck{display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:14px}
+.ck div{background:var(--surface2);border-radius:10px;padding:9px 10px}
+.ck small{display:block;color:var(--muted);font-size:12px}
+.sheet-bg{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:30;display:none}
+.sheet{position:fixed;left:0;right:0;bottom:0;max-width:560px;margin:0 auto;background:var(--surface);border-radius:20px 20px 0 0;padding:20px 16px calc(20px + env(safe-area-inset-bottom,0px));z-index:31;transform:translateY(105%);transition:transform .25s ease}
+.sheet.open{transform:none}
+.sheet h3{font-size:18px;font-weight:800}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:14px 0}
+.seg button{padding:10px 6px;border-radius:10px;border:1px solid var(--line);font-size:13px;font-weight:700}
+.seg button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.opt{display:flex;justify-content:space-between;align-items:center;width:100%;padding:12px;border:1px solid var(--line);border-radius:12px;margin-bottom:8px;text-align:left}
+.opt.on{border-color:var(--brand);background:var(--brand-soft)}
+.opt small{color:var(--muted);font-size:12px;display:block}
+.primary{width:100%;padding:14px;border-radius:999px;background:var(--brand);color:var(--on-brand);font-weight:800;margin-top:8px}
+.primary:disabled{opacity:.4}
+.toast{position:fixed;left:50%;bottom:90px;transform:translate(-50%,20px);background:var(--ink);color:var(--bg);padding:11px 16px;border-radius:12px;font-size:14px;font-weight:600;opacity:0;transition:.25s;z-index:40;width:max-content;max-width:90vw}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.bar{height:8px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:8px}
+.bar i{display:block;height:100%;background:var(--brand)}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;margin-top:14px;overflow:hidden}
+.panel summary{list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px;cursor:pointer}
+.panel summary::-webkit-details-marker{display:none}
+.panel summary small,.switch-row small,.ex small{display:block;color:var(--muted);font-size:13px;font-weight:500}
+.chev{font-size:20px;color:var(--muted);transition:transform .2s}
+.panel[open] .chev{transform:rotate(180deg)}
+.pbody{padding:0 14px 14px;border-top:1px solid var(--line)}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:14px 0 6px}
+.kpis div{background:var(--surface2);border-radius:12px;padding:10px}
+.kpis small{display:block;color:var(--muted);font-size:12px}
+.kpis b{font-size:18px;font-weight:800}
+.mac{margin-top:10px}.mac-h{display:flex;justify-content:space-between;font-size:13px}
+.daychips{display:flex;gap:6px;overflow-x:auto;margin-top:16px;padding-bottom:4px}
+.dchip{flex:none;width:36px;height:36px;border-radius:50%;border:1px solid var(--line);font-size:13px;font-weight:700}
+.dchip.past{color:var(--muted)}.dchip.today{border:2px solid var(--brand)}
+.dchip.on{background:var(--brand);color:var(--on-brand);border-color:var(--brand)}
+.meal h3 small{color:var(--muted);font-weight:600;font-size:12px;margin-left:4px}
+.switch-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--line)}
+.switch{flex:none;width:50px;height:30px;border-radius:99px;background:var(--line);position:relative;transition:background .2s}
+.switch i{position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch[aria-checked="true"]{background:var(--brand)}.switch[aria-checked="true"] i{transform:translateX(20px)}
+.rday{font-size:14px;font-weight:800;margin:16px 0 6px;display:flex;justify-content:space-between}
+.rday small{color:var(--muted);font-weight:600}
+.ex{display:flex;justify-content:space-between;align-items:center;width:100%;text-align:left;padding:10px 12px;border:1px solid var(--line);border-radius:12px;margin-bottom:6px;background:var(--surface2)}
+.ex .sr{flex:none;font-weight:800;color:var(--brand-text)}
+.off{opacity:.45}
+.sheet{max-height:88vh;overflow-y:auto}
+.steprow{display:flex;justify-content:space-between;align-items:center;margin:8px 0;font-weight:700}
+.stepper{display:flex;align-items:center;gap:14px}.stepper button{width:38px;height:38px;border-radius:12px;background:var(--brand-soft);color:var(--brand-text);font-size:20px;font-weight:800}
+.seg.reps{grid-template-columns:repeat(4,1fr)}
+.rowwrap{display:flex;align-items:center;border-bottom:1px solid var(--line)}
+.rowwrap:last-child{border-bottom:0}
+.rowwrap .row{border-bottom:0;flex:1;min-width:0}
+.rowwrap .wabtn{margin-right:12px}
+.wabtn{flex:none;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:var(--brand-soft);color:var(--brand-text)}
+.wabtn svg{width:20px;height:20px}
+.iconbtn{flex:none;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.iconbtn svg{width:20px;height:20px}
+.hist{list-style:none;padding:0;margin:12px 0 0}
+.hist li{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);font-size:14px}
+.hist li:last-child{border-bottom:0}
+.hdot{flex:none;width:10px;height:10px;border-radius:50%;margin-top:6px;background:var(--muted)}
+.h-peso{background:var(--brand)}.h-plan{background:var(--warn)}.h-pago{background:var(--ink)}.h-whatsapp{background:var(--brand-text);box-shadow:0 0 0 2px var(--brand-soft)}
+.dgrid{margin-top:12px}
+.msglist{list-style:none;padding:0;margin:10px 0 0}
+.msglist li{padding:12px 0;border-bottom:1px solid var(--line);font-size:14px}
+.msglist li:last-child{border-bottom:0}
+.msglist li.off p{opacity:.45;text-decoration:line-through}
+.msgact{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+.ghost.sm{display:inline-block;padding:7px 16px;font-size:13px}
+.badge-ed{font-size:11px;color:var(--warn);font-weight:800;margin-left:6px;text-transform:uppercase}
+.chat{background:var(--surface2);border:1px solid var(--line);border-radius:16px;padding:14px;margin-top:10px;display:flex;flex-direction:column;gap:8px}
+.bubble{align-self:flex-start;max-width:88%;background:var(--surface);border:1px solid var(--line);border-radius:4px 14px 14px 14px;padding:10px 12px;font-size:14px;line-height:1.45}
+.bubble .hora{display:block;text-align:right;font-size:11px;color:var(--muted);margin-top:4px}
+.bubble.img{height:110px;width:88%;display:grid;place-items:center;background:var(--brand-soft);color:var(--brand-text);font-weight:700;border-radius:14px;text-align:center}
+textarea.search{font:inherit}
+.btn2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.ghost{display:block;text-align:center;padding:11px 8px;border-radius:999px;border:1px solid var(--line);font-weight:700;font-size:14px;color:var(--ink);text-decoration:none;background:var(--surface2)}
+.linkbtn{margin-top:10px;font-size:13px;color:var(--muted);text-decoration:underline}
+.linkbox{margin-top:10px;padding:12px;border-radius:12px;background:var(--surface2);font-weight:700;word-break:break-all}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.form .search{margin:6px 0 0}.form .seg{margin:6px 0 0}.form .opt{margin-top:6px;margin-bottom:0}
+.form .err{font-size:13px;margin-top:4px}
+.addbtn{flex:none;width:40px;height:40px;border-radius:50%;background:var(--brand);color:var(--on-brand);font-size:26px;font-weight:700;line-height:1}
+.cobro{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;text-align:left}
+.lbl{display:block;font-weight:700;font-size:14px;margin-top:14px}
+.err{color:var(--bad);font-weight:600}
+@media (prefers-reduced-motion:reduce){.sheet,.toast,.switch,.switch i,.chev{transition:none}}
+</style>
+</head>
+<body>
+<main class="app" id="view"></main>
+
+<nav class="tabs"><div>
+  <button data-tab="hoy" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Hoy</button>
+  <button data-tab="clientes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="8" r="4"/><path d="M2 21c0-4 3-6 7-6s7 2 7 6M16 4a4 4 0 0 1 0 8M22 21c0-3-2-5-4-5.5"/></svg>Clientes</button>
+  <button data-tab="plantillas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>Plantillas</button>
+  <button data-tab="cobros"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="6" width="20" height="13" rx="2"/><path d="M2 10h20M6 15h4"/></svg>Cobros</button>
+  <button data-tab="envios"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>Envíos</button>
+</div></nav>
+
+<div class="sheet-bg" id="sheetBg"></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true"></div>
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script>
+const SUPABASE_URL='https://mhfcnhbaejdhbajccqze.supabase.co';
+const SUPABASE_KEY='PEGA_AQUI_TU_CLAVE_PUBLISHABLE'; // Supabase → Project Settings → API Keys → Publishable key (sb_publishable_…). Es pública: puede ir aquí.
+const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+let yo=null;
+const clientes=[];
+const planBase=[
+ {c:'Desayuno',f:['2 huevos','2 rebanadas de pan integral','1 taza de lechosa']},
+ {c:'Almuerzo',f:['1 taza de arroz','½ taza de habichuelas','150 g de pollo','Ensalada verde']},
+ {c:'Merienda',f:['1 yogur natural','1 guineo']},
+ {c:'Cena',f:['1 lata de atún','150 g de batata','Vegetales salteados']}
+];
+const sustitutos={
+ 'atún':[['120 g de pollo','Proteína similar · RD$45'],['1 lata de sardinas','Más grasa saludable · RD$40'],['3 huevos','Más económico · RD$30']],
+ 'pollo':[['150 g de pescado','Proteína similar · RD$90'],['150 g de pavo molido','Menos grasa · RD$85'],['1 lata de atún','Más económico · RD$55']],
+ 'huevo':[['100 g de queso fresco','Proteína similar · RD$40'],['150 g de yogur griego','Sin cocinar · RD$60']],
+ 'arroz':[['150 g de batata','Más fibra · RD$20'],['1 taza de pasta integral','Similar · RD$25'],['150 g de yuca','Local · RD$18']],
+ 'pan':[['3 tortillas de maíz','Similar · RD$20'],['½ taza de avena','Más fibra · RD$15']],
+ 'batata':[['1 taza de arroz','Similar · RD$15'],['150 g de yuca','Similar · RD$18'],['2 guineos verdes','Local · RD$15']]
+};
+const generico=[['Equivalente del mismo grupo','Calorías similares'],['Escribir otro alimento','Manual']];
+const nutri={};
+const pool={
+ Desayuno:[['½ taza de avena','1 guineo','1 vaso de leche descremada'],['2 huevos revueltos','1 taza de mangú','30 g de queso fresco'],['2 huevos','2 rebanadas de pan integral','1 taza de lechosa']],
+ Almuerzo:[['1 taza de arroz','½ taza de habichuelas','150 g de pollo','Ensalada verde'],['150 g de batata','150 g de pescado','Vegetales al vapor'],['1 taza de arroz','150 g de pavo molido','Ensalada verde']],
+ Merienda:[['1 manzana','15 almendras'],['1 yogur natural','1 guineo'],['1 taza de piña','30 g de queso fresco']],
+ Cena:[['2 huevos','2 tortillas de maíz','¼ de aguacate'],['120 g de pollo','150 g de yuca','Ensalada verde'],['1 lata de atún','150 g de batata','Vegetales salteados']]
+};
+const reparto={Desayuno:.25,Almuerzo:.35,Merienda:.12,Cena:.28};
+const grupos={pierna:'Pierna',femoral:'Femoral',gluteo:'Glúteo',core:'Abdomen',pecho:'Pecho',hombro:'Hombro',triceps:'Tríceps',espalda:'Espalda',biceps:'Bíceps'};
+const rutinaBase=[
+ {d:'Lunes',t:'Pierna y glúteo',e:[{n:'Sentadilla goblet',g:'pierna',s:4,r:'12'},{n:'Peso muerto rumano',g:'femoral',s:3,r:'10'},{n:'Hip thrust',g:'gluteo',s:4,r:'12'},{n:'Plancha',g:'core',s:3,r:'40 s'}]},
+ {d:'Miércoles',t:'Pecho, hombro y tríceps',e:[{n:'Press de banca',g:'pecho',s:4,r:'10'},{n:'Press militar',g:'hombro',s:3,r:'10'},{n:'Fondos en banco',g:'triceps',s:3,r:'12'}]},
+ {d:'Viernes',t:'Espalda y bíceps',e:[{n:'Remo con mancuerna',g:'espalda',s:4,r:'10'},{n:'Jalón al pecho',g:'espalda',s:3,r:'12'},{n:'Curl de bíceps',g:'biceps',s:3,r:'12'}]}
+];
+const altEj={pierna:['Prensa de piernas','Sentadilla búlgara','Zancadas','Puente de glúteo'],femoral:['Curl femoral','Puente a una pierna','Buenos días con barra'],gluteo:['Patada de glúteo en polea','Puente de glúteo','Abducción con banda'],core:['Dead bug','Plancha lateral','Crunch en el suelo'],pecho:['Flexiones','Press con mancuernas','Aperturas'],hombro:['Elevaciones laterales','Press Arnold','Press con banda'],triceps:['Extensión en polea','Press francés','Patada de tríceps'],espalda:['Remo en máquina','Remo con banda','Dominadas asistidas'],biceps:['Curl martillo','Curl con banda','Curl en polea']};
+const tiposPlan=[
+ {id:'ali',n:'Solo alimentación',d:'Dieta, lista de compras y frase diaria',p:2000,rutina:false},
+ {id:'full',n:'Alimentación + rutina',d:'Todo por WhatsApp cada día',p:3000,rutina:true},
+ {id:'pres',n:'Presencial + online',d:'Sesiones en el gym y seguimiento',p:4500,rutina:true}
+];
+const planCli={};
+const ajustes={},rutinas={},enviaRutina={};
+function tipoDe(c){return tiposPlan.find(t=>t.id===planCli[c.id])}
+clientes.forEach(c=>{const t=tipoDe(c);c.monto=c.id===1?2500:t.p;enviaRutina[c.id]=t.rutina});
+const coach={nombre:'',wa:'',estado:'sin',slug:''};
+
+const historial={};
+let histFiltro='todo';
+function hoyStr(off){return new Date(Date.now()-(off||0)*864e5).toLocaleDateString('es-DO',{day:'numeric',month:'short'})}
+function log(c,tipo,texto){(historial[c.id]=historial[c.id]||[]).unshift({f:hoyStr(0),tipo,texto});programarGuardado(c)}
+clientes.forEach(c=>{
+ const h=[],len=c.peso.length,step=Math.max(1,Math.floor((c.dia-1)/Math.max(1,len-1)));
+ c.peso.forEach((p,i)=>{const d=i?p-c.peso[i-1]:0;h.push({o:(len-1-i)*step,tipo:'peso',texto:`Check-in: ${p} kg${i?` (${d>0?'+':''}${d.toFixed(1)} kg)`:' · peso inicial'}`})});
+ h.push({o:c.dia,tipo:'plan',texto:`Inició ${tipoDe(c).n} · ${fmt(nutri[c.id].kcal)} kcal al día`});
+ h.push({o:c.dia,tipo:'whatsapp',texto:`WhatsApp activado: ${fmtTel(c.wa)}`});
+ h.push({o:c.dia,tipo:'pago',texto:`Pago registrado: RD$${fmt(c.monto)}`});
+ if(c.id===1){h.push({o:0,tipo:'plan',texto:'Pidió por WhatsApp: "No me gusta el atún"'});h.push({o:5,tipo:'plan',texto:'Nota: molestia en la rodilla izquierda'})}
+ historial[c.id]=h.sort((a,b)=>a.o-b.o).map(x=>({f:hoyStr(x.o),tipo:x.tipo,texto:x.texto}));
+});
+function panelHist(c){
+ const h=historial[c.id]||[],tipos=[['todo','Todo'],['peso','Peso'],['plan','Plan'],['pago','Pagos'],['whatsapp','WhatsApp']];
+ const lista=h.filter(x=>histFiltro==='todo'||x.tipo===histFiltro);
+ return `<details class="panel" data-p="hist" ${abierto.hist?'open':''}><summary><span><b>Historial</b><small>${h.length} registros · peso, plan, pagos y WhatsApp</small></span><span class="chev" aria-hidden="true">⌄</span></summary><div class="pbody">
+ <div class="summary" style="margin-top:12px">${tipos.map(([v,t])=>`<button class="chip ${v===histFiltro?'on':''}" data-hf="${v}">${t}</button>`).join('')}</div>
+ <ol class="hist">${lista.map(x=>`<li><span class="hdot h-${x.tipo}"></span><div><div>${esc(x.texto)}</div><div class="meta">${x.f}</div></div></li>`).join('')||'<li class="sub">No hay registros de este tipo.</li>'}</ol>
+ </div></details>`;
+}
+function chatBtn(c){return `<a class="wabtn" href="https://wa.me/${waNum(c.wa)}" target="_blank" rel="noopener" aria-label="Abrir chat de WhatsApp con ${c.n}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-12.4 7.4L3 20.5l1.6-5.4A8.4 8.4 0 1 1 21 11.5z"/></svg></a>`}
+const autos=[
+ {id:'bienvenida',t:'Bienvenida y lista de compras',d:'Cuando el cliente envía "Empezar"',on:true},
+ {id:'comidas',t:'Comidas del día',d:'Todos los días',hora:'06:00',on:true},
+ {id:'rutina',t:'Rutina de ejercicios',d:'Días de entrenamiento, junto a las comidas',on:true},
+ {id:'compras',t:'Lista de compras semanal',d:'Cada sábado',hora:'09:00',on:true},
+ {id:'checkin',t:'Check-in semanal',d:'Cada lunes: peso, foto, sueño, hambre y energía',hora:'08:00',on:true},
+ {id:'silencio',t:'Alerta: 3 días sin responder',d:'Te avisa a ti en el panel, no al cliente',on:true},
+ {id:'pago',t:'Recordatorio de pago',d:'3 días antes del vencimiento',hora:'10:00',on:true},
+ {id:'renovar',t:'Propuesta de renovación',d:'Cuando faltan 2 días para terminar el plan',on:false}
+];
+/*
+  Banco de mensajes diarios del coach — COME PRO Coach
+  159 mensajes únicos. Usa {nombre} para el nombre del cliente.
+
+  Categorías:
+  - inicio (10): días 1 a 10 del primer plan
+  - general (95): cualquier día
+  - lunes (12), finde (12), descanso (8): según el día
+  - estancamiento (6), regreso (8), logro (8): solo cuando ocurre ese evento
+
+  Con elegirMensaje() ningún mensaje se repite en más de 4 meses:
+  los mensajes que se pueden usar en un día normal (general + lunes + finde + descanso)
+  suman 127, más que los 122 días de 4 meses.
+*/
+
+const MENSAJES = {
+  inicio: [
+    "{nombre}, hoy empieza algo bueno. No necesitas hacerlo perfecto, solo seguir el plan lo mejor que puedas. Cualquier duda con una comida o un ejercicio, me escribes. Estoy contigo en esto.",
+    "Segundo día, {nombre}. Los primeros días el cuerpo se está acostumbrando a horarios nuevos, así que si sientes más hambre o cansancio, es normal. Toma suficiente agua y respeta las horas de comida.",
+    "¿Cómo te fue ayer? Lo importante esta primera semana no es bajar de peso rápido, es crear el hábito. Si logras hacer las 4 comidas a su hora, ya vas ganando.",
+    "{nombre}, un consejo para esta semana: deja preparadas desde la noche algunas cosas del desayuno o el almuerzo. Cuando la comida está lista, es mucho más fácil no salirse del plan.",
+    "Ya llevas casi una semana. Muchas personas abandonan en estos días porque todavía no ven cambios. Los cambios se ven después; primero se construye la rutina. Sigue así.",
+    "Hoy quiero que te fijes en algo: cómo duermes. Dormir bien ayuda a controlar el hambre y a recuperarte del entrenamiento. Intenta acostarte a una hora parecida todos los días.",
+    "{nombre}, si hay algún alimento del plan que no te gusta o que no consigues, dímelo. Prefiero cambiarlo a que dejes de comer o te salgas del plan. El plan se adapta a ti, no al revés.",
+    "Primera semana casi completa. Piensa en lo que ya cambiaste: horarios, comidas, entrenamiento. Eso ya es progreso, aunque la báscula todavía no lo muestre.",
+    "Hoy es un buen día para revisar la lista de compras y ver qué te falta para los próximos días. Tener los alimentos en casa es la mitad del trabajo.",
+    "{nombre}, gracias por tomarte esto en serio desde el principio. Los primeros días son los más difíciles y los estás pasando. Vamos por la segunda semana."
+  ],
+
+  general: [
+    "Buenos días, {nombre}. Hoy no tienes que hacerlo perfecto, solo tienes que hacerlo. Un día cumplido al 80% vale mucho más que un día perfecto que nunca empieza.",
+    "¿Ya tomaste agua hoy? Muchas veces lo que sentimos como hambre es sed. Ten una botella cerca y ve tomando durante el día.",
+    "{nombre}, la constancia le gana a la motivación. Habrá días sin ganas, y esos son los que más cuentan. Haz aunque sea lo mínimo del plan, pero no lo sueltes.",
+    "Recuerda que la proteína de cada comida es la que te mantiene lleno por más tiempo y ayuda a cuidar tu músculo. Si vas a recortar algo, que no sea eso.",
+    "Hoy enfócate en una sola cosa: comer despacio. Tómate al menos 15 minutos por comida y vas a sentirte satisfecho con lo que te toca.",
+    "Si hoy tienes un compromiso o comes fuera, no pasa nada. Elige algo con proteína, pide la salsa aparte y vuelve al plan en la siguiente comida. Un plato no arruina tu progreso.",
+    "{nombre}, el peso sube y baja de un día a otro por el agua, la sal y hasta el estrés. No te guíes por un solo día; lo que importa es la tendencia de varias semanas.",
+    "Hoy te reto a caminar 10 minutos extra, después del almuerzo o la cena. Parece poco, pero sumado durante un mes hace una diferencia real.",
+    "La mejor rutina es la que puedes repetir. No busques el entrenamiento perfecto; busca ir hoy, y mañana, y pasado.",
+    "¿Cómo dormiste anoche? Si dormiste poco, hoy puede que tengas más antojos. Tenlo presente y ten a mano la merienda del plan.",
+    "{nombre}, no te compares con nadie en redes sociales. Ves su mejor foto, no sus días difíciles. Tu único punto de comparación eres tú hace un mes.",
+    "Hoy en el entrenamiento cuida la técnica antes que el peso. Un movimiento bien hecho con menos peso te da mejores resultados y te protege de lesiones.",
+    "Un antojo dura unos minutos. Si llega, toma agua, espera 10 minutos o distráete con otra cosa. Muchas veces se pasa solo.",
+    "{nombre}, cocinar en casa es una de las mejores cosas que puedes hacer por tu progreso. Sabes exactamente lo que comes y además ahorras dinero.",
+    "Hoy agradécele a tu cuerpo lo que sí puede hacer. Cada entrenamiento es una oportunidad, no un castigo.",
+    "No te olvides de las verduras de tu plan. Llenan el plato, tienen pocas calorías y te ayudan con la digestión.",
+    "No necesitas motivación todos los días, necesitas un plan. Y ya lo tienes. Hoy solo toca seguirlo.",
+    "{nombre}, si ayer no salió como querías, hoy es un día nuevo. No compenses comiendo menos ni entrenando de más; simplemente retoma el plan normal.",
+    "Un truco sencillo: sirve tu comida en un plato y siéntate a comer. Nada de comer de pie o directo del envase. Ayuda muchísimo a controlar las porciones.",
+    "El progreso no siempre se ve en la báscula. Fíjate en cómo te queda la ropa, cómo subes escaleras o cuánta energía tienes. Eso también cuenta.",
+    "Hoy entrena pensando en la persona que quieres ser dentro de seis meses. Ella te va a agradecer que no te saltaste el día de hoy.",
+    "{nombre}, ¿tienes la merienda lista para la tarde? Es el momento del día en que más gente se sale del plan. Prepárate desde ahora.",
+    "La disciplina es elegir entre lo que quieres ahora y lo que más quieres. Hoy elige lo que más quieres.",
+    "Si estás bajo estrés, es normal que te cueste más. Respira, organiza tu día y no te exijas de más. En días así, cumplir lo básico ya es un logro.",
+    "Recuerda calentar bien antes de entrenar: 5 a 10 minutos de movilidad y series ligeras. Tu cuerpo rinde más y se cuida mejor.",
+    "{nombre}, el café o el té sin azúcar puede ser un buen aliado entre comidas. Pero cuidado con las cremas y el azúcar, que suman calorías sin que te des cuenta.",
+    "Hoy celebra algo pequeño: una comida bien hecha, una serie más, una noche bien dormida. Los grandes cambios están hechos de cosas pequeñas.",
+    "No tienes que ganarte la comida con ejercicio. La comida es tu combustible, y tu plan está calculado para lo que necesitas.",
+    "{nombre}, si hoy te toca entrenar y estás cansado, ve de todos modos y haz aunque sea la mitad. Casi siempre, una vez que empiezas, terminas la rutina completa.",
+    "Si pasas mucho tiempo sentado, levántate cada hora y camina un par de minutos. Tu espalda y tu energía te lo van a agradecer.",
+    "Hoy toca confiar en el proceso. Estás haciendo las cosas bien, y los resultados llegan a quien no se detiene.",
+    "{nombre}, no dejes que una mala comida se convierta en un mal día, ni un mal día en una mala semana. Corta la racha en la siguiente comida.",
+    "Las frutas del plan son tu dulce natural. Si te dan ganas de algo dulce, empieza por ahí.",
+    "Hoy, en cada serie del entrenamiento, concéntrate en el músculo que estás trabajando. Esa conexión hace que el ejercicio sea mucho más efectivo.",
+    "Rodéate de personas que apoyen tu cambio. Cuéntale a tu familia lo que estás haciendo; es más fácil cuando en casa te entienden.",
+    "{nombre}, una meta sin un plan es solo un deseo. Tú ya tienes el plan. Hoy es solo un día más de cumplirlo.",
+    "Si vas a hacer la compra hoy, ve con la lista y sin hambre. Así compras lo que necesitas y evitas llevarte cosas que no están en el plan.",
+    "Tu cuerpo cambia más rápido de lo que crees cuando eres constante, y más lento de lo que quisieras. Ten paciencia; vas bien.",
+    "Hoy te recuerdo que el descanso entre series también es parte del entrenamiento. Respeta los tiempos para rendir mejor en cada serie.",
+    "{nombre}, ¿cómo te has sentido de energía esta semana? Cuéntame, que eso me ayuda a ajustar tu plan si hace falta.",
+    "No esperes al lunes para empezar de nuevo. Cada comida es una oportunidad de volver al camino.",
+    "Hoy intenta que la mitad de tu plato sean vegetales. Es una de las costumbres más sencillas y que más resultados da a largo plazo.",
+    "El cansancio de hoy es la fuerza de mañana. Cada entrenamiento deja tu cuerpo un poco mejor preparado que ayer.",
+    "{nombre}, si comes fuera hoy, fíjate primero en la proteína: pollo, pescado, huevo o carne magra. Luego acompaña con vegetales y una porción moderada de carbohidratos.",
+    "Hacer las cosas bien cuando nadie te ve también es parte del proceso. Lo que haces en casa, sin que nadie se entere, es lo que cambia tu cuerpo.",
+    "Hoy cuida las bebidas: jugos, refrescos y alcohol suman muchas calorías sin llenarte. Agua, agua con limón o té son tus mejores opciones.",
+    "{nombre}, no se trata de nunca fallar, se trata de volver rápido cuando fallas. Esa es la diferencia entre quien lo logra y quien no.",
+    "Hoy al entrenar, intenta mejorar algo pequeño respecto a la última vez: una repetición más, un poco más de peso o mejor técnica.",
+    "Comer bien no tiene que ser aburrido. Si quieres darle otro toque a alguna receta de tu plan con especias o cocinándola de otra forma, ¡adelante!",
+    "{nombre}, piensa en por qué empezaste. Escríbelo si hace falta y léelo en los días difíciles. Tu razón es más fuerte que cualquier antojo.",
+    "Hoy toca ser amable contigo. Hablarte mal no te hace avanzar más rápido; reconocer tu esfuerzo sí te ayuda a seguir.",
+    "Un buen desayuno marca el resto del día. Si hoy no tienes tiempo, al menos lleva algo del plan para comerlo en cuanto puedas.",
+    "{nombre}, los resultados no son en línea recta. Habrá semanas en las que avances más y otras en las que parezca que no pasa nada. Lo importante es no detenerte.",
+    "Hoy fíjate en tu postura: hombros atrás y abdomen activado. Además de verte mejor, protege tu espalda en el día a día.",
+    "Prepara hoy algo para mañana: cocinar la proteína o picar los vegetales. Diez minutos hoy te ahorran una mala decisión mañana.",
+    "{nombre}, ¿qué te está costando más del plan? Dímelo con confianza. Mi trabajo es hacerte el camino más fácil.",
+    "La fuerza no solo es física. Cada vez que eliges seguir con tu plan, también estás entrenando tu mente.",
+    "Hoy recuerda estirar unos minutos al terminar de entrenar. Te ayuda a recuperarte y a moverte mejor al día siguiente.",
+    "No hay comidas prohibidas, hay cantidades y momentos. Si un día comes algo fuera del plan, disfrútalo sin culpa y sigue adelante.",
+    "{nombre}, hoy es un buen día para tomarte una foto de progreso. Dentro de unas semanas vas a querer comparar y ver todo lo que avanzaste.",
+    "Tu salud es una inversión, no un gasto. Cada comida y cada entrenamiento de hoy es un depósito para tu futuro.",
+    "Si sientes que el hambre está muy alta todo el día, avísame. A veces solo hace falta ajustar un poco las porciones o los horarios.",
+    "{nombre}, hoy entrena con intención. No se trata de cuánto tiempo pasas en el gimnasio, sino de lo que haces mientras estás ahí.",
+    "Los hábitos tardan en formarse, pero una vez que los tienes, ya no dependes de la fuerza de voluntad. Estás construyendo eso ahora mismo.",
+    "Hoy deja el teléfono un rato antes de dormir. Descansar bien es parte de tu plan tanto como la comida y el ejercicio.",
+    "{nombre}, cuando sientas que no avanzas, mira hacia atrás: ya llevas muchos días cumpliendo. Eso no lo hace cualquiera.",
+    "Si hoy no puedes ir al gimnasio, haz algo en casa: sentadillas, flexiones, plancha. Moverte un poco siempre es mejor que nada.",
+    "Hoy intenta comer sin el teléfono ni la televisión. Prestarle atención a la comida te ayuda a disfrutarla y a notar cuándo ya estás lleno.",
+    "{nombre}, esto no es solo bajar de peso o ganar músculo; es sentirte mejor, tener más energía y confiar más en ti. Eso ya está pasando.",
+    "Hoy te recuerdo que el progreso lento sigue siendo progreso. No importa la velocidad, importa la dirección.",
+    "Si hoy andas con más ansiedad, organiza tus comidas con anticipación y mantén la merienda a mano. Planificar te quita decisiones difíciles.",
+    "{nombre}, cada vez que cumples tu plan le demuestras a tu mente que puedes cumplir lo que te propones. Eso se nota en todo, no solo en el gym.",
+    "Hoy hidrátate bien antes, durante y después de entrenar. Rindes más y te recuperas mejor.",
+    "La meta no es una dieta de 30 días, es una forma de vida que puedas mantener. Cada día que sigues el plan lo vas haciendo más tuyo.",
+    "{nombre}, hoy hazlo por ti. No por la báscula ni por nadie más. Por cómo te quieres sentir.",
+    "Hoy fíjate en las porciones de carbohidratos: arroz, pan, víveres. Son buenos y necesarios, pero en la cantidad que marca tu plan.",
+    "{nombre}, la motivación te ayuda a empezar, pero el hábito es lo que te mantiene. Hoy sigue sumando días al hábito.",
+    "Si hoy tienes un día muy ocupado, prioriza dos cosas: tus comidas a tiempo y el agua. Lo demás lo vamos ajustando.",
+    "Hoy prueba a entrenar con música que te motive. Pequeños detalles como ese cambian cómo se siente el entrenamiento.",
+    "{nombre}, cada mañana tienes la opción de rendirte o de seguir. Que hoy también sea seguir.",
+    "Comer a horas parecidas todos los días ayuda a que tu cuerpo regule mejor el hambre. Intenta respetar tus horarios hoy.",
+    "Hoy dedica un minuto a respirar profundo antes de comer. Bajar el ritmo te ayuda a comer con más calma y menos ansiedad.",
+    "{nombre}, el cambio que buscas no se nota de un día para otro, pero se construye día a día. Hoy pones un ladrillo más.",
+    "Si hoy te da antojo de algo salado, revisa si estás comiendo suficiente durante el día. A veces el antojo es señal de que te faltó algo en una comida.",
+    "Hoy en tu entrenamiento, termina la última serie con la misma calidad que la primera. Ahí es donde se nota el carácter.",
+    "{nombre}, seguir un plan no significa dejar de vivir. Significa vivir con más energía y sentirte mejor contigo.",
+    "Hoy cuida el tamaño de tus meriendas. Son para llegar con buen apetito a la siguiente comida, no para reemplazarla.",
+    "Cada vez que subes una escalera en vez de usar el ascensor, sumas. El movimiento del día a día también cuenta.",
+    "{nombre}, si alguien en casa no entiende tu plan, explícale por qué lo haces. Tener apoyo hace todo más fácil.",
+    "Hoy es buen día para revisar tu progreso de fuerza: ¿levantas más que al principio? Eso también es avance.",
+    "No te castigues por un error. Mejor pregúntate qué pasó: ¿fue hambre, cansancio o una reunión? Con eso nos preparamos mejor para la próxima vez.",
+    "{nombre}, tu esfuerzo de hoy quizás no se vea mañana, pero sí dentro de unas semanas. Confía.",
+    "Si hoy vas a estar fuera de casa, lleva una merienda del plan. Así no dependes de lo que encuentres en la calle.",
+    "El objetivo no es comer menos, es comer mejor. Tu plan está pensado para que tengas energía y avances al mismo tiempo.",
+    "{nombre}, gracias por seguir aquí, día tras día. Tu compromiso es lo que hace que este plan funcione."
+  ],
+
+  lunes: [
+    "Feliz lunes, {nombre}. Nueva semana, nueva oportunidad. Revisa tu plan, organiza tus comidas y vamos con todo.",
+    "Lunes de empezar bien. Si el fin de semana te saliste un poco del plan, hoy simplemente retomas. Sin culpa y sin compensar.",
+    "{nombre}, ¿qué te propones esta semana? Elige una sola meta pequeña: tomar más agua, no saltarte la merienda o entrenar todos los días que te tocan.",
+    "Hoy es día de check-in: mándame tu peso de esta mañana y cuéntame cómo te fue la semana pasada. Con eso ajusto lo que haga falta.",
+    "Los lunes marcan el tono de toda la semana. Si hoy cumples, mañana es más fácil. Arranca fuerte.",
+    "{nombre}, aprovecha el lunes para dejar preparadas algunas comidas de los próximos días. Una hora de cocina hoy te ahorra mucho estrés.",
+    "Nuevo lunes. Mira la semana pasada sin juzgarte: qué salió bien y qué puedes mejorar. Con eso basta para avanzar.",
+    "Empieza la semana con el entrenamiento. Moverte hoy te pone en modo enfocado para todo lo demás.",
+    "{nombre}, esta semana quiero que te fijes en tu descanso. Intenta dormir al menos 7 horas. Vas a notar la diferencia en tu hambre y tu energía.",
+    "Lunes otra vez, y aquí sigues. Eso ya dice mucho de ti. Vamos por otra semana cumplida.",
+    "Hoy es buen día para revisar tu lista de compras de la semana. Con la nevera organizada, todo es más fácil.",
+    "{nombre}, una semana más cerca de tu meta. No pienses en todo lo que falta; piensa solo en cumplir hoy."
+  ],
+
+  finde: [
+    "Llegó el fin de semana, {nombre}. Disfruta, descansa y mantén tus horarios de comida lo más que puedas. No tiene que ser perfecto.",
+    "Si hoy tienes una salida o reunión, haz tu comida anterior como siempre para no llegar con mucha hambre. Así eliges mejor.",
+    "Sábado de recargar energía. Aprovecha para caminar, salir con la familia o hacer algo activo que disfrutes.",
+    "{nombre}, el fin de semana es cuando más se nota el compromiso. No hace falta ser estricto, solo no soltarte del todo.",
+    "Si vas a tomar alcohol hoy, hazlo con moderación y alterna con agua. Y no te saltes comidas para 'compensar'.",
+    "Domingo de preparar la semana: revisa la lista de compras y deja cocinadas algunas proteínas. El lunes te lo va a agradecer.",
+    "Hoy disfruta con calma tu comida favorita del plan. Los fines de semana también se puede comer rico y seguir avanzando.",
+    "{nombre}, si el fin de semana no salió como querías, no pasa nada. Lo importante es cómo retomas el lunes.",
+    "Domingo tranquilo. Descansa bien, que tu cuerpo se recupera y se fortalece en los días de descanso.",
+    "Fin de semana no significa pausa en el progreso. Cada decisión cuenta, incluso un sábado.",
+    "Si comes fuera este fin de semana, pide platos a la plancha o al horno y comparte el postre. Pequeñas decisiones, grandes resultados.",
+    "{nombre}, terminaste otra semana. Tómate un momento para reconocer tu esfuerzo. Te lo ganaste."
+  ],
+
+  descanso: [
+    "Hoy es día de descanso de entrenamiento, {nombre}. Descansar también es parte del plan: es cuando tus músculos se recuperan y se fortalecen.",
+    "Día sin rutina, pero no sin plan. Mantén tus comidas y, si puedes, sal a caminar un rato. El movimiento suave ayuda a recuperarte.",
+    "Aprovecha el descanso para estirar o hacer algo de movilidad. Tu cuerpo lo agradecerá en el próximo entrenamiento.",
+    "{nombre}, hoy no toca entrenar, así que enfócate en dormir bien y en tomar suficiente agua. La recuperación es donde ocurre el cambio.",
+    "Si hoy sientes el cuerpo adolorido por el último entrenamiento, es normal. Muévete suave y verás que mejora.",
+    "Día de descanso. Sigue comiendo tus proteínas como siempre; tus músculos las necesitan aunque hoy no entrenes.",
+    "Hoy descansas, pero no desconectas. Piensa en cómo te fue en los entrenamientos de la semana y prepárate para el próximo.",
+    "{nombre}, descansar sin culpa también es disciplina. Mañana vuelves con más fuerza."
+  ],
+
+  // Solo cuando la báscula no se mueve en 2 check-ins seguidos
+  estancamiento: [
+    "{nombre}, sé que la báscula no se ha movido estos días y puede ser frustrante. Les pasa a todos y no significa que estés fallando. Sigue con el plan y en tu próximo check-in lo revisamos juntos.",
+    "A veces el cuerpo se toma una pausa antes de volver a cambiar. Fíjate en tus medidas y en tu ropa; muchas veces el progreso sigue aunque el peso no lo muestre.",
+    "Si sientes que estás estancado, revisemos lo básico: horas de sueño, agua, porciones y entrenamientos cumplidos. Casi siempre la respuesta está ahí.",
+    "{nombre}, los estancamientos son parte del camino. Lo que no puede pasar es que te detengas por uno. Seguimos y ajustamos lo que haga falta.",
+    "Cuando el progreso se ve lento es cuando más importa ser constante. Las personas que lo logran son las que siguen en estas semanas.",
+    "No cambies todo de golpe por una semana sin bajar. Dale tiempo al plan; si en el próximo check-in sigue igual, lo ajustamos juntos."
+  ],
+
+  // Solo cuando el cliente pasa 3 días o más sin responder
+  regreso: [
+    "{nombre}, hace unos días que no sé de ti. ¿Todo bien? Si se complicó algo, cuéntame y adaptamos el plan a lo que puedas hacer ahora.",
+    "Te extraño por aquí. No importa cuántos días pasaron; lo importante es volver. Hoy empezamos con lo básico: tus 4 comidas.",
+    "{nombre}, a todos nos pasa que la vida se complica. No te preocupes por lo que pasó estos días; hoy es un buen día para retomar.",
+    "Volver cuesta menos de lo que parece. No tienes que recuperar nada, solo seguir desde hoy. Aquí estoy para ayudarte.",
+    "Si sientes que el plan se volvió difícil de seguir, dime qué pasó. Prefiero ajustarlo a que lo dejes.",
+    "{nombre}, un tropiezo no borra todo lo que ya avanzaste. Tu progreso sigue ahí. Retomemos hoy.",
+    "No hace falta esperar al lunes. Empieza en la próxima comida y mándame un ✅ cuando la hagas.",
+    "Me importa tu progreso, {nombre}. Si necesitas una semana más suave, dímelo y la armamos juntos."
+  ],
+
+  // Cada logro tiene su evento: racha7, buenaSemana, mitad, constancia, racha14, checkinBueno, tramoFinal, final
+  logro: [
+    { evento: "racha7", texto: "¡{nombre}, llevas 7 días seguidos cumpliendo! Eso es disciplina de verdad. Sigue así." },
+    { evento: "buenaSemana", texto: "Excelente semana. Cumpliste casi todo el plan y eso se va a notar. Estoy orgulloso de tu esfuerzo." },
+    { evento: "mitad", texto: "{nombre}, ya vas por la mitad del plan. Mira todo lo que has hecho en estas semanas. ¡No te detengas ahora!" },
+    { evento: "constancia", texto: "Tu constancia está dando frutos. Cada vez que cumples, tu cuerpo y tu mente se hacen más fuertes." },
+    { evento: "racha14", texto: "¡Lo estás logrando! Dos semanas seguidas cumpliendo tu plan. Eso ya se está volviendo un hábito." },
+    { evento: "checkinBueno", texto: "{nombre}, tus números del check-in van en la dirección correcta. Ese es el resultado de tu trabajo diario. ¡Felicidades!" },
+    { evento: "tramoFinal", texto: "Último tramo del plan. Lo que hagas estos días define cómo terminas. Vamos con todo hasta el final." },
+    { evento: "final", texto: "¡Terminaste los 30 días, {nombre}! Pocas personas lo logran. Tómate un momento para celebrarlo y hablemos de tu próximo objetivo." }
+  ]
+};
+
+/*
+  Elige el mensaje del día para un cliente sin repetir.
+  cliente: { nombre, diaPlan (1-30 del primer plan), usados: [ids ya enviados] }
+  ctx: { fecha: Date, entrena: bool, evento: null | 'estancamiento' | 'regreso' | nombre de logro }
+  Devuelve { id, texto } y agrega el id a cliente.usados (guárdalo en Supabase).
+*/
+function elegirMensaje(cliente, ctx) {
+  const usados = new Set(cliente.usados || []);
+  const libres = (cat) => {
+    const lista = MENSAJES[cat] || [];
+    return lista
+      .map((m, i) => ({ id: `${cat}-${i}`, texto: typeof m === "string" ? m : m.texto, evento: m.evento }))
+      .filter((m) => !usados.has(m.id));
+  };
+
+  // Orden de prioridad: evento > inicio > tipo de día > general
+  const orden = [];
+  if (ctx.evento === "estancamiento" || ctx.evento === "regreso") orden.push(libres(ctx.evento));
+  else if (ctx.evento) orden.push(libres("logro").filter((m) => m.evento === ctx.evento));
+  if (cliente.diaPlan && cliente.diaPlan <= 10 && !(cliente.usados || []).some((id) => id.startsWith("general"))) {
+    orden.push(libres("inicio").slice(0, 1));
+  }
+  const dia = ctx.fecha.getDay(); // 0 domingo, 1 lunes, 6 sábado
+  if (dia === 1) orden.push(libres("lunes"));
+  if (dia === 0 || dia === 6) orden.push(libres("finde"));
+  if (!ctx.entrena && dia !== 0 && dia !== 6) orden.push(libres("descanso"));
+  orden.push(libres("general"));
+
+  let elegido = null;
+  for (const lista of orden) {
+    if (lista.length) {
+      elegido = lista[Math.floor(Math.random() * lista.length)];
+      // Inicio va en orden, no al azar
+      if (lista[0].id.startsWith("inicio")) elegido = lista[0];
+      break;
+    }
+  }
+
+  // Si ya se usaron todos los generales (más de 4 meses), se reinicia el ciclo
+  if (!elegido) {
+    cliente.usados = (cliente.usados || []).filter((id) => !id.startsWith("general"));
+    return elegirMensaje(cliente, ctx);
+  }
+
+  cliente.usados = [...(cliente.usados || []), elegido.id];
+  return { id: elegido.id, texto: elegido.texto.replaceAll("{nombre}", cliente.nombre) };
+}
+
+/* ===== Integración del banco de mensajes ===== */
+const msgOff=new Set(),msgEdit={},msgHoy={};
+let msgCat='inicio';
+const catLbl={inicio:'Primeros días',general:'Generales',lunes:'Lunes',finde:'Fin de semana',descanso:'Descanso',estancamiento:'Estancamiento',regreso:'Regreso',logro:'Logros'};
+const totalMsgs=Object.values(MENSAJES).reduce((a,l)=>a+l.length,0);
+function eventoDe(c){
+ if(c.alerta&&c.alerta.t==='3 días sin responder')return 'regreso';
+ if(c.dia===30)return 'final';if(c.dia===15)return 'mitad';if(c.dia===27)return 'tramoFinal';
+ if(c.hist.length>=7&&c.hist.slice(-7)==='yyyyyyy')return 'racha7';
+ const p=c.peso;if(p.length>=3&&c.obj==='Pérdida de grasa'&&Math.abs(p[p.length-1]-p[p.length-2])<0.25)return 'estancamiento';
+ return null;
+}
+function pedirMensaje(c,fecha,evento){
+ const cli={nombre:c.n.split(' ')[0],diaPlan:c.dia,usados:[...(c.usados||[]),...msgOff]};
+ const r=elegirMensaje(cli,{fecha,entrena:[1,3,5].includes(fecha.getDay()),evento});
+ c.usados=cli.usados.filter(id=>!msgOff.has(id));
+ return r.id;
+}
+function textoBase(id){const i=id.lastIndexOf('-'),cat=id.slice(0,i),m=MENSAJES[cat][+id.slice(i+1)];return typeof m==='string'?m:m.texto}
+function textoMsg(id,c){return (msgEdit[id]||textoBase(id)).replaceAll('{nombre}',c.n.split(' ')[0])}
+function mensajeDelDia(c){if(!msgHoy[c.id])msgHoy[c.id]=pedirMensaje(c,new Date(),eventoDe(c));return textoMsg(msgHoy[c.id],c)}
+const datosSeed={1:{sexo:'m',edad:34,altura:162,act:'lig',dias:'3',cond:'ninguna',no:'atún'},2:{sexo:'h',edad:27,altura:178,act:'mod',dias:'5',cond:'ninguna',no:''},3:{sexo:'m',edad:29,altura:165,act:'mod',dias:'4',cond:'ninguna',no:''},4:{sexo:'h',edad:45,altura:175,act:'sed',dias:'3',cond:'ninguna',no:''},5:{sexo:'m',edad:52,altura:160,act:'lig',dias:'3',cond:'ninguna',no:''},6:{sexo:'h',edad:22,altura:172,act:'alt',dias:'5',cond:'ninguna',no:''}};
+clientes.forEach(c=>{
+ c.datos=datosSeed[c.id];c.inicio=hoyStr(c.dia-1);c.usados=[];
+ const dia=c.dia;for(let d=1;d<dia;d++){c.dia=d;pedirMensaje(c,new Date(Date.now()-(dia-d)*864e5),null)}c.dia=dia;
+});
+const actLbl={sed:'Sentado la mayor parte del día',lig:'Actividad ligera',mod:'Actividad media',alt:'Muy activo'};
+const condLbl={ninguna:'Ninguna',diabetes:'Diabetes',hta:'Presión alta',otra:'Otra (revisar)'};
+const objKey={'Pérdida de grasa':'grasa','Ganar músculo':'musculo','Mantenimiento':'mant'};
+const objLbl={grasa:'Pérdida de grasa',musculo:'Ganar músculo',mant:'Mantenimiento'};
+function panelDatos(c){
+ const d=c.datos,p=c.peso[c.peso.length-1],imc=(p/((d.altura/100)**2)).toFixed(1),n=nutri[c.id];
+ const f=(l,v)=>`<div><small>${l}</small>${v}</div>`;
+ return `<details class="panel" data-p="datos" ${abierto.datos!==false?'open':''}><summary><span><b>Datos del cliente</b><small>${d.edad} años · ${p} kg · ${d.altura} cm · ${c.obj}</small></span><span class="chev" aria-hidden="true">⌄</span></summary><div class="pbody">
+ <div class="ck dgrid">${f('Peso actual',p+' kg')}${f('Peso inicial',c.peso[0]+' kg')}${f('Peso meta',c.meta+' kg')}${f('IMC',imc)}${f('Edad',d.edad+' años')}${f('Sexo',d.sexo==='h'?'Hombre':'Mujer')}${f('Altura',d.altura+' cm')}${f('Objetivo',c.obj)}${f('Estilo de vida',actLbl[d.act])}${f('Entrena',d.dias+' días por semana')}${f('Calorías',fmt(n.kcal)+' kcal/día')}${f('Plan',tipoDe(c).n)}${f('No come o alergias',d.no?esc(d.no):'Nada indicado')}${f('Condición de salud',condLbl[d.cond])}${f('Inicio del plan',c.inicio)}${f('WhatsApp',fmtTel(c.wa))}</div>
+ <button class="primary" id="editDatos" style="margin-top:12px">Editar datos</button></div></details>`;
+}
+function abrirDatos(c){
+ const d={...c.datos};let obj=objKey[c.obj]||'grasa';
+ const sh=document.getElementById('sheet');
+ const segD=(campo,ops,val)=>`<div class="seg seg-d" data-campo="${campo}" style="grid-template-columns:repeat(${ops.length},1fr);margin-top:6px">${ops.map(([v,t])=>`<button type="button" data-v="${v}" class="${val===v?'on':''}">${t}</button>`).join('')}</div>`;
+ sh.innerHTML=`<h3>Datos de ${esc(c.n.split(' ')[0])}</h3><p class="sub">Si cambias peso, edad, altura, sexo, objetivo o estilo de vida, COME PRO recalcula las calorías.</p>
+ <div class="grid3">
+  <div><label class="lbl" for="dPeso">Peso (kg)</label><input class="search" id="dPeso" type="number" inputmode="decimal" step="0.1" value="${c.peso[c.peso.length-1]}" style="margin:6px 0 0"></div>
+  <div><label class="lbl" for="dEdad">Edad</label><input class="search" id="dEdad" type="number" inputmode="numeric" value="${d.edad}" style="margin:6px 0 0"></div>
+  <div><label class="lbl" for="dAlt">Altura (cm)</label><input class="search" id="dAlt" type="number" inputmode="numeric" value="${d.altura}" style="margin:6px 0 0"></div>
+ </div>
+ <label class="lbl" for="dMeta">Peso meta (kg)</label><input class="search" id="dMeta" type="number" inputmode="decimal" step="0.1" value="${c.meta}" style="margin:6px 0 0">
+ <p class="hint err" id="dErr" hidden>Revisa los valores: edad de 16 a 90, peso y meta de 35 a 250 kg, altura de 130 a 220 cm.</p>
+ <label class="lbl">Sexo</label>${segD('sexo',[['m','Mujer'],['h','Hombre']],d.sexo)}
+ <label class="lbl">Objetivo</label>${segD('obj',[['grasa','Perder grasa'],['musculo','Ganar músculo'],['mant','Mantener']],obj)}
+ <label class="lbl">Estilo de vida</label>${segD('act',[['sed','Sentado'],['lig','Ligera'],['mod','Media'],['alt','Alta']],d.act)}
+ <label class="lbl">Días de entrenamiento</label>${segD('dias',[['2','2'],['3','3'],['4','4'],['5','5']],d.dias)}
+ <label class="lbl" for="dNo">No come o alergias</label><input class="search" id="dNo" value="${esc(d.no||'')}" placeholder="Ej.: atún, maní" style="margin:6px 0 0">
+ <label class="lbl">Condición de salud</label>${segD('cond',[['ninguna','Ninguna'],['diabetes','Diabetes'],['hta','Presión alta'],['otra','Otra']],d.cond)}
+ <button class="primary" id="gDatos" style="margin-top:14px">Guardar datos</button>`;
+ sh.querySelectorAll('.seg-d').forEach(s=>s.querySelectorAll('button').forEach(b=>b.onclick=()=>{if(s.dataset.campo==='obj')obj=b.dataset.v;else d[s.dataset.campo]=b.dataset.v;s.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b))}));
+ sh.querySelectorAll('input').forEach(i=>i.oninput=()=>{document.getElementById('dErr').hidden=true});
+ document.getElementById('gDatos').onclick=()=>{
+  const g=id=>+document.getElementById(id).value;
+  const peso=g('dPeso'),edad=g('dEdad'),alt=g('dAlt'),meta=g('dMeta');
+  if(!(edad>=16&&edad<=90&&peso>=35&&peso<=250&&alt>=130&&alt<=220&&meta>=35&&meta<=250)){document.getElementById('dErr').hidden=false;return}
+  const antes=c.datos,pesoAntes=c.peso[c.peso.length-1],objAntes=objKey[c.obj]||'grasa',cambios=[];
+  d.edad=edad;d.altura=alt;d.no=document.getElementById('dNo').value.trim();
+  if(peso!==pesoAntes){c.peso.push(peso);log(c,'peso',`Peso actualizado: ${pesoAntes} → ${peso} kg`)}
+  if(meta!==c.meta){cambios.push(`meta ${c.meta} → ${meta} kg`);c.meta=meta}
+  if(edad!==antes.edad)cambios.push(`edad ${antes.edad} → ${edad}`);
+  if(alt!==antes.altura)cambios.push(`altura ${antes.altura} → ${alt} cm`);
+  if(d.sexo!==antes.sexo)cambios.push('sexo corregido');
+  if(obj!==objAntes)cambios.push(`objetivo: ${objLbl[obj].toLowerCase()}`);
+  if(d.act!==antes.act)cambios.push(`estilo de vida: ${actLbl[d.act].toLowerCase()}`);
+  if(d.dias!==antes.dias)cambios.push(`${d.dias} días de entrenamiento`);
+  if(d.no!==(antes.no||'')){cambios.push(`no come: ${d.no||'nada'}`);const a=aj(c.id);d.no.split(',').map(s=>s.trim().toLowerCase()).filter(Boolean).forEach(x=>{if(!a.excl.includes(x))a.excl.push(x)})}
+  if(d.cond!==antes.cond)cambios.push(`condición de salud: ${condLbl[d.cond].toLowerCase()}`);
+  if(cambios.length)log(c,'plan','Datos actualizados: '+cambios.join(', '));
+  const recalc=peso!==pesoAntes||edad!==antes.edad||alt!==antes.altura||d.sexo!==antes.sexo||obj!==objAntes||d.act!==antes.act;
+  c.datos=d;c.obj=objLbl[obj];
+  let msg=cambios.length||peso!==pesoAntes?'Datos guardados':'No hubo cambios';
+  if(recalc){const k0=nutri[c.id].kcal;nutri[c.id]=ComeProMotor.generarPlan({sexo:d.sexo,edad,peso,altura:alt,act:d.act,obj});if(nutri[c.id].kcal!==k0){log(c,'plan',`Plan recalculado: ${fmt(k0)} → ${fmt(nutri[c.id].kcal)} kcal al día`);msg='Datos guardados. Calorías: '+fmt(nutri[c.id].kcal)+' kcal/día'}}
+  if(d.cond!=='ninguna'&&antes.cond==='ninguna')c.alerta={t:'Revisar plan',d:'Indicó una condición de salud',c:'t-bad',accion:'Revisar'};
+  cerrar();renderCliente(c);toast(msg);
+ };
+ abrirSheet();
+}
+function panelBanco(){
+ const lista=MENSAJES[msgCat].map((m,i)=>({id:msgCat+'-'+i,t:msgEdit[msgCat+'-'+i]||(typeof m==='string'?m:m.texto)}));
+ return `<h2>Banco de mensajes motivadores</h2><div class="card">
+ <p class="sub" style="margin-top:0">${totalMsgs} mensajes · ${totalMsgs-msgOff.size} activos. Ningún cliente recibe el mismo mensaje dos veces en más de 4 meses. Edítalos para que suenen como tú; usa {nombre} para el nombre del cliente.</p>
+ <div class="summary">${Object.keys(MENSAJES).map(k=>`<button class="chip ${k===msgCat?'on':''}" data-mcat="${k}">${catLbl[k]} (${MENSAJES[k].length})</button>`).join('')}</div>
+ <ol class="msglist">${lista.map(x=>`<li class="${msgOff.has(x.id)?'off':''}"><p>${esc(x.t)}${msgEdit[x.id]?'<span class="badge-ed">Editado</span>':''}</p><div class="msgact"><button class="ghost sm" data-medit="${x.id}">Editar</button><button class="switch" role="switch" aria-checked="${!msgOff.has(x.id)}" aria-label="Usar este mensaje" data-moff="${x.id}"><i></i></button></div></li>`).join('')}</ol></div>`;
+}
+function abrirMsg(id){
+ const sh=document.getElementById('sheet'),orig=textoBase(id);
+ sh.innerHTML=`<h3>Editar mensaje</h3><p class="sub">${catLbl[id.slice(0,id.lastIndexOf('-'))]}. Usa {nombre} para el nombre del cliente.</p>
+ <textarea class="search" id="mTxt" rows="6" style="margin:12px 0 4px;resize:vertical">${esc(msgEdit[id]||orig)}</textarea>
+ <p class="hint err" id="mErr" hidden>El mensaje no puede quedar vacío.</p>
+ <button class="primary" id="mGuardar">Guardar mensaje</button>
+ ${msgEdit[id]?'<button class="linkbtn" id="mRest">Restaurar el mensaje original</button>':''}`;
+ const ta=document.getElementById('mTxt');ta.oninput=()=>{document.getElementById('mErr').hidden=true};
+ document.getElementById('mGuardar').onclick=()=>{const t=ta.value.trim();if(!t){document.getElementById('mErr').hidden=false;return}if(t===orig)delete msgEdit[id];else msgEdit[id]=t;cerrar();renderEnvios();toast('Mensaje guardado')};
+ const r=document.getElementById('mRest');if(r)r.onclick=()=>{delete msgEdit[id];cerrar();renderEnvios();toast('Mensaje original restaurado')};
+ abrirSheet();
+}
+
+const frases=['Cada comida cumplida es un paso más. ¡Tú puedes!','No tiene que ser perfecto, tiene que ser constante.','Hoy cuenta. Haz lo mejor que puedas con lo que tienes.','Tu yo de dentro de 30 días te lo va a agradecer.','Pequeños hábitos, grandes cambios.'];
+let prevCli=1,grupoMsg='Todos';
+function esc(s){return String(s).replace(/[&<>"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]))}
+function waFormat(s){return esc(s).replace(/\*(.+?)\*/g,'<b>$1</b>').replace(/\n/g,'<br>')}
+function fmtHora(h){const [H,M]=h.split(':').map(Number);return `${H%12||12}:${String(M).padStart(2,'0')} ${H<12?'a. m.':'p. m.'}`}
+function mensajeHoy(c){
+ const a=aj(c.id),d=c.dia,r=rutinaDe(c.id),ent=r[(d-1)%r.length];
+ const comidas=planDia(d).map((m,mi)=>`*${m.c}:* ${m.f.map((f,fi)=>a.dia[d+'-'+mi+'-'+fi]||a.plan[f]||f).join(', ')}`).join('\n');
+ const rut=enviaRutina[c.id]!==false?`\n\n🏋️ *Rutina (${ent.t}):*\n${ent.e.map(e=>`• ${e.n}: ${e.s} × ${e.r}`).join('\n')}`:'';
+ return `Buenos días, ${c.n.split(' ')[0]} 💪 Día ${d} de 30\n\n${comidas}${rut}\n\n${mensajeDelDia(c)}\n\nResponde ✅ cuando termines el día.`;
+}
+function renderEnvios(){
+ const c=clientes.find(x=>x.id===prevCli)||clientes[0];
+ if(!c){view.innerHTML=cabecera()+'<h1>Envíos automáticos</h1><p class="sub">Aquí verás lo que recibe cada cliente cuando agregues el primero.</p><button class="primary" data-nuevo style="margin-top:16px">Añadir cliente</button>';return}
+ const tags=['Todos',...new Set(clientes.map(x=>x.tag))];
+ const dest=clientes.filter(x=>(grupoMsg==='Todos'||x.tag===grupoMsg)&&x.waEstado==='activo');
+ const hora=autos.find(x=>x.id==='comidas').hora;
+ view.innerHTML=cabecera()+`<h1>Envíos automáticos</h1><p class="sub">Lo que el sistema manda solo por WhatsApp, desde tu número.</p>
+ <h2>Vista previa de hoy</h2>
+ <div class="summary" style="margin-top:0">${clientes.map(x=>`<button class="chip ${x.id===c.id?'on':''}" data-prev="${x.id}">${esc(x.n.split(' ')[0])}</button>`).join('')}</div>
+ <div class="chat"><div class="bubble img">🍽️ Imagen de las comidas del día ${c.dia}</div><div class="bubble">${waFormat(mensajeHoy(c))}<span class="hora">${fmtHora(hora)}</span></div><p class="hint" style="text-align:center;margin-top:0">Mensaje motivador de hoy: ${catLbl[msgHoy[c.id].slice(0,msgHoy[c.id].lastIndexOf('-'))].toLowerCase()} · ${esc(c.n.split(' ')[0])} ya recibió ${(c.usados||[]).length} de ${totalMsgs}</p>${c.waEstado!=='activo'?`<p class="hint" style="text-align:center">${c.waEstado==='pausado'?'Envíos pausados: este mensaje no saldrá hoy.':'Aún no activa WhatsApp: este mensaje no saldrá hoy.'}</p>`:''}</div>
+ <h2>Automatizaciones</h2><div class="card" style="padding-top:0;padding-bottom:0">${autos.map(x=>`<div class="switch-row"><span><b>${x.t}</b><small>${x.d}${x.hora?' · '+fmtHora(x.hora):''}</small></span><button class="switch" role="switch" aria-checked="${x.on}" aria-label="${x.t}" data-auto="${x.id}"><i></i></button></div>`).join('')}</div>
+ ${panelBanco()}
+ <h2>Mensaje a un grupo</h2><div class="card">
+ <div class="summary" style="margin-top:0">${tags.map(t=>`<button class="chip ${t===grupoMsg?'on':''}" data-grupo="${t}">${t}</button>`).join('')}</div>
+ <label class="lbl" for="msgGrupo">Mensaje</label><textarea class="search" id="msgGrupo" rows="3" style="margin:6px 0 4px;resize:vertical" placeholder="Ej.: Este sábado no hay clase presencial. ¡Entrenen en casa!"></textarea>
+ <p class="hint err" id="grupoErr" hidden>Escribe el mensaje antes de enviarlo.</p>
+ <p class="hint">Se envía a los clientes con WhatsApp activo. Si el cliente no ha escrito en las últimas 24 horas, Meta exige una plantilla aprobada y puede tener costo.</p>
+ <button class="primary" id="enviarGrupo" ${dest.length?'':'disabled'}>Enviar a ${dest.length} ${dest.length===1?'cliente':'clientes'}</button></div>`;
+ view.querySelectorAll('[data-prev]').forEach(b=>b.onclick=()=>{prevCli=b.dataset.prev;renderEnvios()});
+ view.querySelectorAll('[data-grupo]').forEach(b=>b.onclick=()=>{const txt=$('#msgGrupo').value;grupoMsg=b.dataset.grupo;renderEnvios();$('#msgGrupo').value=txt});
+ view.querySelectorAll('[data-auto]').forEach(b=>b.onclick=()=>{const x=autos.find(a=>a.id===b.dataset.auto);x.on=!x.on;b.setAttribute('aria-checked',x.on);toast((x.on?'Activado: ':'Desactivado: ')+x.t)});
+ view.querySelectorAll('[data-mcat]').forEach(b=>b.onclick=()=>{msgCat=b.dataset.mcat;const y=window.scrollY;renderEnvios();window.scrollTo(0,y)});
+ view.querySelectorAll('[data-medit]').forEach(b=>b.onclick=()=>abrirMsg(b.dataset.medit));
+ view.querySelectorAll('[data-moff]').forEach(b=>b.onclick=()=>{const id=b.dataset.moff;if(msgOff.has(id))msgOff.delete(id);else msgOff.add(id);Object.keys(msgHoy).forEach(k=>{if(msgHoy[k]===id)delete msgHoy[k]});const y=window.scrollY;renderEnvios();window.scrollTo(0,y);toast(msgOff.has(id)?'Mensaje desactivado':'Mensaje activado')});
+ $('#msgGrupo').oninput=()=>$('#grupoErr').hidden=true;
+ $('#enviarGrupo').onclick=()=>{const txt=$('#msgGrupo').value.trim();if(!txt){$('#grupoErr').hidden=false;return}dest.forEach(x=>log(x,'whatsapp','Mensaje de grupo: "'+(txt.length>60?txt.slice(0,60)+'…':txt)+'"'));$('#msgGrupo').value='';toast('Enviado a '+dest.length+(dest.length===1?' cliente':' clientes'))};
+}
+function renderAjustes(){
+ const est={conectado:['Conectado','t-ok'],pendiente:['Falta verificar','t-warn'],sin:['Sin conectar','t-bad']}[coach.estado];
+ view.innerHTML=`<button class="back" id="back">‹ Volver</button><h1>Ajustes</h1>
+ <h2>Tu WhatsApp de envío</h2>
+ <div class="card"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><b style="font-size:17px">${fmtTel(coach.wa)}</b><span class="tag ${est[1]}">${est[0]}</span></div>
+ <p class="sub">Desde este número salen la bienvenida, la lista de compras, las comidas y la rutina de todos tus clientes. Ellos lo ven con tu nombre.</p>
+ <label class="lbl" for="cWa">Número de WhatsApp</label><input class="search" id="cWa" type="tel" inputmode="tel" value="${coach.wa}" style="margin:6px 0 4px">
+ <p class="hint err" id="cErr" hidden></p>
+ <p class="hint">Al cambiarlo, Meta te pide confirmar el número con un código y los envíos quedan en espera hasta confirmarlo. Avisa a tus clientes: recibirán los mensajes desde el número nuevo.</p>
+ <button class="primary" id="cGuardar">${coach.estado==='sin'?'Conectar número':'Guardar número'}</button>
+ </div><h2>Tu cuenta</h2><div class="card"><p class="sub" style="margin-top:0">${esc(yo?yo.email:'')}</p><button class="primary" style="background:var(--surface);color:var(--ink);border:1px solid var(--line)" id="salir">Cerrar sesión</button></div>`;
+ $('#salir').onclick=async()=>{await sb.auth.signOut();location.reload()};
+ $('#back').onclick=()=>render();
+ const inp=$('#cWa'),er=$('#cErr');inp.oninput=()=>er.hidden=true;
+ $('#cGuardar').onclick=()=>{const t=inp.value.replace(/\D/g,'');
+  if(!(t.length===10||(t.length>=11&&t.length<=15))){er.textContent='Escribe un número válido de 10 dígitos, o con código de país.';er.hidden=false;return}
+  if(t===coach.wa&&coach.estado==='conectado'){toast('Ese número ya está conectado');return}
+  coach.wa=t;coach.estado='pendiente';renderAjustes();toast('Te enviamos un código por SMS para verificar el número')};
+ const s=$('#cSim');if(s)s.onclick=()=>{coach.estado='conectado';renderAjustes();toast('Número conectado. Los envíos salen desde aquí.')};
+}
+/* Punto de integración: en producción este objeto se reemplaza por motor.js con los motores reales de COME PRO
+   (cálculo calórico, recetas, scaleDayToTarget, lista de compras, presupuesto y rutinas). Aquí solo estima calorías para la demo. */
+const ComeProMotor={
+ generarPlan(d){
+  const tmb=10*d.peso+6.25*d.altura-5*d.edad+(d.sexo==='h'?5:-161);
+  const tdee=Math.round(tmb*{sed:1.2,lig:1.375,mod:1.55,alt:1.725}[d.act]/10)*10;
+  const kcal=Math.round(tdee*(1+{grasa:-0.2,musculo:0.12,mant:0}[d.obj])/10)*10;
+  const p=Math.round(d.peso*(d.obj==='mant'?1.6:1.8));
+  const g=Math.round(kcal*0.27/9);
+  const c=Math.max(0,Math.round((kcal-p*4-g*9)/4));
+  return {kcal,tdee,p,c,g};
+ }
+};
+function waNum(t){return t.length===10?'1'+t:t}
+function fmtTel(t){return t.length===10?`(${t.slice(0,3)}) ${t.slice(3,6)}-${t.slice(6)}`:'+'+t}
+function linkActivacion(c){
+ const act=`https://wa.me/${waNum(coach.wa)}?text=${encodeURIComponent('Empezar '+c.codigo)}`;
+ return `https://wa.me/${waNum(c.wa)}?text=${encodeURIComponent(`Hola ${c.n.split(' ')[0]}, soy ${coach.nombre.split(' ')[0]}, tu entrenador. Toca este link y envía el mensaje para activar tu plan por WhatsApp: ${act}`)}`;
+}
+function waCard(c){
+ const est={activo:['Activo','t-ok',`Recibe comidas, lista de compras${enviaRutina[c.id]!==false?' y rutina':''} cada día a las 6:00 a. m.`],pendiente:['Esperando activación','t-warn','Los envíos empiezan cuando el cliente envíe "Empezar".'],pausado:['Pausado','t-bad','No recibe mensajes hasta que reanudes los envíos.']}[c.waEstado];
+ return `<h2>WhatsApp</h2><div class="card"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px"><div><b style="font-size:17px">${fmtTel(c.wa)}</b><div class="meta" style="white-space:normal">${est[2]}</div></div><span class="tag ${est[1]}" style="flex:none">${est[0]}</span></div>
+ <div class="btn2"><button class="ghost" id="cambiarNum">Cambiar número</button><a class="ghost" target="_blank" rel="noopener" href="${c.waEstado==='pendiente'?linkActivacion(c):'https://wa.me/'+waNum(c.wa)}">${c.waEstado==='pendiente'?'Enviar link':'Escribirle'}</a></div>
+ </div>`;
+}
+function abrirNumero(c){
+ const sh=document.getElementById('sheet');
+ sh.innerHTML=`<h3>Cambiar WhatsApp de ${c.n.split(' ')[0]}</h3><p class="sub">Número actual: ${fmtTel(c.wa)}</p>
+ <label class="lbl" for="nuevoNum">Nuevo número</label><input class="search" id="nuevoNum" type="tel" inputmode="tel" placeholder="809 555 0142" style="margin:6px 0 4px">
+ <p class="hint err" id="numErr" hidden></p>
+ <p class="hint">Los envíos se detienen hasta que el cliente confirme desde el nuevo número enviando "Empezar". Así WhatsApp registra que aceptó recibir mensajes.</p>
+ <button class="primary" id="guardarNum">Cambiar número</button>`;
+ const inp=document.getElementById('nuevoNum'),er=document.getElementById('numErr');inp.oninput=()=>er.hidden=true;
+ document.getElementById('guardarNum').onclick=()=>{const t=inp.value.replace(/\D/g,'');
+  if(t===c.wa){er.textContent='Ese ya es el número actual.';er.hidden=false;return}
+  if(!(t.length===10||(t.length>=11&&t.length<=15))){er.textContent='Escribe un número válido de 10 dígitos, o con código de país.';er.hidden=false;return}
+  log(c,'whatsapp',`Número cambiado: ${fmtTel(c.wa)} → ${fmtTel(t)}`);c.wa=t;c.waEstado='pendiente';c.alerta={t:'Esperando activación',d:'Cambió de número: falta confirmar',c:'t-warn',accion:'Reenviar'};cerrar();renderCliente(c);toast('Número cambiado. Envíale el link de activación.')};
+ abrirSheet();setTimeout(()=>inp.focus(),300);
+}
+let form={};
+function renderNuevo(modoForm){
+ modoForm=modoForm||'manual';
+ form={sexo:'m',obj:'grasa',act:'mod',dias:'3',plan:'full',cond:'ninguna'};
+ const seg=(campo,ops)=>`<div class="seg seg-f" data-campo="${campo}" style="grid-template-columns:repeat(${ops.length},1fr)">${ops.map(([v,t])=>`<button type="button" data-v="${v}" class="${form[campo]===v?'on':''}">${t}</button>`).join('')}</div>`;
+ view.innerHTML=`<button class="back" id="back">‹ Volver</button><h1>Nuevo cliente</h1>
+ <div class="seg" style="grid-template-columns:1fr 1fr"><button data-m="manual" class="${modoForm==='manual'?'on':''}">Llenar yo los datos</button><button data-m="link" class="${modoForm==='link'?'on':''}">Enviarle el link</button></div>
+ ${modoForm==='link'?`<div class="card"><p>El formulario para que tu cliente llene sus datos desde su teléfono es el próximo paso del sistema. Por ahora, usa <b>Llenar yo los datos</b>.</p></div>`:`
+ <div class="card form">
+  <label class="lbl" for="fNombre" style="margin-top:0">Nombre</label><input class="search" id="fNombre" autocomplete="name"><p class="err" data-err="fNombre" hidden>Escribe el nombre del cliente.</p>
+  <label class="lbl" for="fWa">WhatsApp</label><input class="search" id="fWa" type="tel" inputmode="tel" placeholder="809 555 0142"><p class="err" data-err="fWa" hidden>Escribe un número válido de 10 dígitos, o con código de país.</p>
+  <label class="lbl">Sexo</label>${seg('sexo',[['m','Mujer'],['h','Hombre']])}
+  <div class="grid3"><div><label class="lbl" for="fEdad">Edad</label><input class="search" id="fEdad" type="number" inputmode="numeric"></div><div><label class="lbl" for="fPeso">Peso (kg)</label><input class="search" id="fPeso" type="number" inputmode="decimal" step="0.1"></div><div><label class="lbl" for="fAlt">Altura (cm)</label><input class="search" id="fAlt" type="number" inputmode="numeric"></div></div>
+  <p class="err" data-err="medidas" hidden>Revisa edad (16 a 90), peso (35 a 250 kg) y altura (130 a 220 cm).</p>
+  <label class="lbl">Objetivo</label>${seg('obj',[['grasa','Perder grasa'],['musculo','Ganar músculo'],['mant','Mantener']])}
+  <label class="lbl">Actividad fuera del gym</label>${seg('act',[['sed','Sentado'],['lig','Ligera'],['mod','Media'],['alt','Alta']])}
+  <label class="lbl">Días de entrenamiento por semana</label>${seg('dias',[['2','2'],['3','3'],['4','4'],['5','5']])}
+  <label class="lbl" for="fNo">Alimentos que no come o alergias</label><input class="search" id="fNo" placeholder="Ej.: atún, maní">
+  <label class="lbl">Condición de salud</label>${seg('cond',[['ninguna','Ninguna'],['diabetes','Diabetes'],['hta','Presión alta'],['otra','Otra']])}
+  <label class="lbl">Tipo de plan</label>${tiposPlan.map(t=>`<button type="button" class="opt ${form.plan===t.id?'on':''}" data-plan="${t.id}"><span><b>${t.n}</b><small>${t.d}</small></span><b>RD$${fmt(t.p)}</b></button>`).join('')}
+ </div>
+ <button class="primary" id="crear" style="margin-top:14px">Generar plan con COME PRO</button>
+ <p class="hint" style="text-align:center">Se crean calorías, 30 días de recetas, lista de compras y rutina con los motores de COME PRO.</p>`}`;
+ $('#back').onclick=()=>render();
+ view.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>renderNuevo(b.dataset.m));
+ if(modoForm==='link')return;
+ view.querySelectorAll('.seg-f').forEach(s=>s.querySelectorAll('button').forEach(b=>b.onclick=()=>{form[s.dataset.campo]=b.dataset.v;s.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b))}));
+ view.querySelectorAll('[data-plan]').forEach(b=>b.onclick=()=>{form.plan=b.dataset.plan;view.querySelectorAll('[data-plan]').forEach(x=>x.classList.toggle('on',x===b))});
+ view.querySelectorAll('input').forEach(i=>i.addEventListener('input',()=>view.querySelectorAll('.err').forEach(e=>e.hidden=true)));
+ $('#crear').onclick=crearCliente;
+}
+async function crearCliente(){
+ const v=id=>document.getElementById(id).value.trim();
+ const nombre=v('fNombre'),tel=v('fWa').replace(/\D/g,''),edad=+v('fEdad'),peso=+v('fPeso'),alt=+v('fAlt'),no=v('fNo');
+ let ok=true;const err=k=>{view.querySelector(`[data-err="${k}"]`).hidden=false;ok=false};
+ if(!nombre)err('fNombre');
+ if(!(tel.length===10||(tel.length>=11&&tel.length<=15)))err('fWa');
+ if(!(edad>=16&&edad<=90&&peso>=35&&peso<=250&&alt>=130&&alt<=220))err('medidas');
+ if(!ok){view.querySelector('.err:not([hidden])').scrollIntoView({block:'center',behavior:'smooth'});return}
+ const t=tiposPlan.find(x=>x.id===form.plan),btn=$('#crear');btn.disabled=true;btn.textContent='Guardando…';
+ const plan=ComeProMotor.generarPlan({sexo:form.sexo,edad,peso,altura:alt,act:form.act,obj:form.obj});
+ const revisar=form.cond!=='ninguna';
+ const vence=new Date(Date.now()+30*864e5).toLocaleDateString('es-DO',{day:'numeric',month:'short'});
+ const c={id:null,n:nombre,obj:{grasa:'Pérdida de grasa',musculo:'Ganar músculo',mant:'Mantenimiento'}[form.obj],tag:t.id==='pres'?'Presencial':'Online',dia:1,adh:100,peso:[peso],
+  meta:form.obj==='grasa'?Math.round(peso*0.92):form.obj==='musculo'?Math.round(peso*1.05):peso,pago:'Pendiente',vence,monto:t.p,
+  nota:[revisar?'Indicó una condición de salud: revisa el plan antes del primer envío.':'',no?'No come: '+no+'.':''].filter(Boolean).join(' '),
+  alerta:revisar?{t:'Revisar plan',d:'Indicó una condición de salud',c:'t-bad',accion:'Revisar'}:{t:'Esperando activación',d:'Aún no envía "Empezar" por WhatsApp',c:'t-warn',accion:'Reenviar'},
+  hist:'',ck:{sueno:'—',hambre:'—',energia:'—',cumple:'—'},wa:waNum(tel),waEstado:'pendiente',datos:{sexo:form.sexo,edad,altura:alt,act:form.act,dias:form.dias,cond:form.cond,no},inicio:hoyStr(0),usados:[]};
+ let id;
+ for(let intento=0;intento<3&&!id;intento++){
+  c.codigo=coach.slug.toUpperCase()+'-'+Math.floor(1000+Math.random()*9000);
+  const {data,error}=await sb.from('clientes').insert(filaDe(c,t.id,t.rutina,plan)).select('id').single();
+  if(data)id=data.id;else if(!(error&&error.code==='23505')){btn.disabled=false;btn.textContent='Generar plan con COME PRO';toast('No se pudo guardar: '+(error?error.message:'error'));return}
+ }
+ if(!id){btn.disabled=false;btn.textContent='Generar plan con COME PRO';toast('No se pudo crear el código. Intenta otra vez.');return}
+ c.id=id;await sb.from('planes').upsert({cliente_id:id,kcal:plan.kcal,dias:[]});
+ clientes.push(c);planCli[id]=t.id;enviaRutina[id]=t.rutina;nutri[id]=plan;
+ historial[id]=[];
+ log(c,'peso',`Check-in: ${peso} kg · peso inicial`);
+ log(c,'plan',`Registro: ${edad} años, ${alt} cm · ${c.obj} · ${form.dias} días de entrenamiento`);
+ log(c,'plan',`Plan generado: ${fmt(plan.kcal)} kcal al día · ${t.n}`);
+ log(c,'whatsapp',`Número registrado: ${fmtTel(tel)} · esperando activación`);
+ if(no)aj(id).excl.push(...no.split(',').map(s=>s.trim().toLowerCase()).filter(Boolean));
+ renderListo(c,revisar);window.scrollTo(0,0);
+}
+function renderListo(c,revisar){
+ const n=nutri[c.id],nom=c.n.split(' ')[0];
+ view.innerHTML=`<h1>Plan creado para ${nom}</h1><p class="sub">${fmt(n.kcal)} kcal al día · ${n.p} g de proteína · 30 días de recetas y lista de compras${enviaRutina[c.id]?' · rutina de entrenamiento':''}.</p>
+ ${revisar?'<div class="note">Indicó una condición de salud. El plan no se envía hasta que lo apruebes en su ficha.</div>':''}
+ <h2>Falta un paso: activar WhatsApp</h2>
+ <div class="card"><p>Envíale este link desde tu WhatsApp. Cuando ${nom} lo toque y envíe <b>"Empezar"</b>, recibe la bienvenida y su lista de compras. Los envíos diarios empiezan al día siguiente.</p>
+ <a class="primary" style="display:block;text-align:center;text-decoration:none;margin-top:12px" target="_blank" rel="noopener" href="${linkActivacion(c)}">Enviar link de activación</a></div>
+ <button class="primary" style="background:var(--surface);color:var(--ink);border:1px solid var(--line);margin-top:12px" id="verFicha">Ver ficha del cliente</button>`;
+ $('#verFicha').onclick=()=>{actual=c;diaSel=1;renderCliente(c);window.scrollTo(0,0)};
+}
+function abrirPrecio(c){
+ let sel=planCli[c.id],precio=c.monto;
+ const sh=document.getElementById('sheet');
+ const pintar=()=>{const t=tiposPlan.find(x=>x.id===sel);
+  sh.innerHTML=`<h3>Plan y precio de ${c.n.split(' ')[0]}</h3><p class="sub">El cambio se aplica desde el próximo cobro (${c.vence}).</p>
+  <div style="margin-top:12px">${tiposPlan.map(x=>`<button class="opt ${x.id===sel?'on':''}" data-t="${x.id}"><span><b>${x.n}</b><small>${x.d}</small></span><b>RD$${fmt(x.p)}</b></button>`).join('')}</div>
+  <label class="lbl" for="precio">Precio para este cliente (RD$ al mes)</label>
+  <input class="search" id="precio" type="number" inputmode="numeric" min="0" step="100" value="${precio}" style="margin:6px 0 4px">
+  <p class="hint" id="precioHint">${precio!==t.p?'Precio especial. El plan cuesta RD$'+fmt(t.p)+'.':'Precio normal del plan.'}</p>
+  <p class="hint err" id="precioErr" hidden>Escribe un monto mayor que cero.</p>
+  <button class="primary" id="guardarPrecio">Guardar plan y precio</button>`;
+  sh.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{sel=b.dataset.t;precio=tiposPlan.find(x=>x.id===sel).p;pintar()});
+  const inp=document.getElementById('precio');
+  inp.oninput=()=>{precio=+inp.value;document.getElementById('precioErr').hidden=true;document.getElementById('precioHint').textContent=precio!==t.p?'Precio especial. El plan cuesta RD$'+fmt(t.p)+'.':'Precio normal del plan.'};
+  document.getElementById('guardarPrecio').onclick=()=>{
+   if(!(precio>0)){document.getElementById('precioErr').hidden=false;return}
+   const antes=enviaRutina[c.id]!==false;planCli[c.id]=sel;c.monto=precio;enviaRutina[c.id]=t.rutina;log(c,'pago',`Plan: ${t.n} · RD$${fmt(precio)}/mes desde el ${c.vence}`);cerrar();renderCliente(c);
+   toast('Guardado: RD$'+fmt(precio)+'/mes desde el '+c.vence+(antes!==t.rutina?(t.rutina?'. Rutina activada.':'. Rutina desactivada.'):''))};
+ };
+ pintar();abrirSheet();
+}
+function abrirTipo(id){
+ const t=tiposPlan.find(x=>x.id===id),sh=document.getElementById('sheet');let precio=t.p;
+ sh.innerHTML=`<h3>${t.n}</h3><p class="sub">${t.d}</p><label class="lbl" for="pTipo">Precio del plan (RD$ al mes)</label><input class="search" id="pTipo" type="number" inputmode="numeric" min="0" step="100" value="${t.p}" style="margin:6px 0 4px"><p class="hint err" id="tipoErr" hidden>Escribe un monto mayor que cero.</p><p class="hint">Los clientes con precio especial mantienen su precio.</p><button class="primary" id="gTipo">Guardar precio</button>`;
+ const inp=document.getElementById('pTipo');inp.oninput=()=>{precio=+inp.value;document.getElementById('tipoErr').hidden=true};
+ document.getElementById('gTipo').onclick=()=>{
+  if(!(precio>0)){document.getElementById('tipoErr').hidden=false;return}
+  const afect=clientes.filter(c=>planCli[c.id]===id&&c.monto===t.p);afect.forEach(c=>{log(c,'pago',`Precio del plan ${t.n}: RD$${fmt(c.monto)} → RD$${fmt(precio)}`);c.monto=precio});t.p=precio;cerrar();renderCobros();
+  toast(afect.length?afect.length+(afect.length===1?' cliente pasa':' clientes pasan')+' a RD$'+fmt(precio)+' en su próximo cobro':'Precio actualizado para clientes nuevos')};
+ abrirSheet();
+}
+const abierto={plan:true,rutina:false};
+let tab='hoy',filtro='Todos',actual=null,diaSel=1;
+function aj(id){return ajustes[id]=ajustes[id]||{dia:{},plan:{},excl:[]}}
+function rutinaDe(id){return rutinas[id]=rutinas[id]||JSON.parse(JSON.stringify(rutinaBase))}
+function planDia(d){return Object.keys(pool).map((c,i)=>({c,f:pool[c][(d-1+i)%3]}))}
+function fmt(n){return n.toLocaleString('es-DO')}
+function abrirSheet(){document.getElementById('sheetBg').style.display='block';requestAnimationFrame(()=>document.getElementById('sheet').classList.add('open'))}
+function panelPlan(c){
+ const n=nutri[c.id],a=aj(c.id),dif=n.kcal-n.tdee,tot=n.p*4+n.c*4+n.g*9;
+ const macro=(t,g,k)=>`<div class="mac"><div class="mac-h"><span>${t}</span><b>${g} g · ${Math.round(g*k/tot*100)}%</b></div><div class="bar"><i style="width:${Math.round(g*k/tot*100)}%"></i></div></div>`;
+ return `<details class="panel" data-p="plan" ${abierto.plan?'open':''}><summary><span><b>Plan de alimentación</b><small>${fmt(n.kcal)} kcal al día · 30 días</small></span><span class="chev" aria-hidden="true">⌄</span></summary><div class="pbody">
+ <div class="kpis"><div><small>Calorías objetivo</small><b>${fmt(n.kcal)}</b></div><div><small>Gasto diario</small><b>${fmt(n.tdee)}</b></div><div><small>${dif<0?'Déficit':dif>0?'Superávit':'Balance'}</small><b>${dif>0?'+':''}${fmt(dif)}</b></div></div>
+ ${macro('Proteína',n.p,4)}${macro('Carbohidratos',n.c,4)}${macro('Grasa',n.g,9)}
+ <div class="daychips">${Array.from({length:30},(_,i)=>i+1).map(d=>`<button class="dchip ${d===diaSel?'on':''} ${d<c.dia?'past':''} ${d===c.dia?'today':''}" data-dia="${d}" aria-label="Día ${d}">${d}</button>`).join('')}</div>
+ <p class="hint" style="margin:6px 0 0"><b>Día ${diaSel}</b>${diaSel===c.dia?' · hoy':diaSel<c.dia?' · ya enviado':''}</p>
+ ${planDia(diaSel).map((m,mi)=>`<div class="meal"><h3>${m.c}<small>${Math.round(n.kcal*reparto[m.c]/10)*10} kcal</small></h3><div class="foods">${m.f.map((f,fi)=>{const k=diaSel+'-'+mi+'-'+fi;const v=a.dia[k]||a.plan[f]||f;return `<button class="food ${v!==f?'changed':''}" data-k="${k}" data-f="${v}" data-o="${f}">${v}</button>`}).join('')}</div></div>`).join('')}
+ <p class="hint">Toca un alimento para cambiarlo.${a.excl.length?' No le gusta: '+a.excl.join(', ')+'.':''}</p>
+ </div></details>`;
+}
+function panelRutina(c){
+ const on=enviaRutina[c.id]!==false,r=rutinaDe(c.id);
+ return `<details class="panel" data-p="rutina" ${abierto.rutina?'open':''}><summary><span><b>Rutina de ejercicios</b><small>${on?r.length+' días por semana · se envía':'Desactivada · no se envía'}</small></span><span class="chev" aria-hidden="true">⌄</span></summary><div class="pbody">
+ <div class="switch-row"><span><b>Enviar rutina por WhatsApp</b><small>${on?'Llega cada día de entrenamiento junto a las comidas.':'El cliente solo recibe la alimentación.'}</small></span><button class="switch" role="switch" aria-checked="${on}" aria-label="Enviar rutina por WhatsApp" id="swRutina"><i></i></button></div>
+ <div class="${on?'':'off'}">${r.map((d,di)=>`<h3 class="rday">${d.d}<small>${d.t}</small></h3>${d.e.map((e,ei)=>`<button class="ex" data-ex="${di}-${ei}" ${on?'':'disabled'}><span><b>${e.n}</b><small>${grupos[e.g]}</small></span><span class="sr">${e.s} × ${e.r}</span></button>`).join('')}`).join('')}
+ <p class="hint">${on?'Toca un ejercicio para cambiarlo o ajustar series y repeticiones.':'Activa el envío para editar la rutina.'}</p></div>
+ </div></details>`;
+}
+function abrirEjercicio(c,di,ei){
+ const r=rutinaDe(c.id),e=r[di].e[ei],orig=e.n;
+ const ops=[orig,...altEj[e.g].filter(x=>x!==orig)];
+ let sel=orig,s=e.s,rep=e.r;const reps=['8','10','12','15','20','30 s','40 s','60 s'];
+ const sh=document.getElementById('sheet');
+ const pintar=()=>{sh.innerHTML=`<h3>${orig}</h3><p class="sub">${r[di].d} · ${grupos[e.g]}. Las alternativas trabajan el mismo músculo.</p>
+ <div style="margin-top:12px">${ops.map(o=>`<button class="opt ${o===sel?'on':''}" data-n="${o}"><span><b>${o}</b><small>${o===orig?'Ejercicio actual':grupos[e.g]}</small></span><span>${o===sel?'✓':''}</span></button>`).join('')}</div>
+ <div class="steprow"><span>Series</span><div class="stepper"><button data-s="-1" aria-label="Menos series">−</button><b>${s}</b><button data-s="1" aria-label="Más series">+</button></div></div>
+ <p class="hint" style="margin:10px 0 0">Repeticiones o tiempo</p>
+ <div class="seg reps" style="margin-top:6px">${reps.map(x=>`<button data-r="${x}" class="${x===rep?'on':''}">${x}</button>`).join('')}</div>
+ <button class="primary" id="aplicarEj">Guardar cambios</button>`;
+  sh.querySelectorAll('[data-n]').forEach(b=>b.onclick=()=>{sel=b.dataset.n;pintar()});
+  sh.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{s=Math.min(8,Math.max(1,s+(+b.dataset.s)));pintar()});
+  sh.querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>{rep=b.dataset.r;pintar()});
+  document.getElementById('aplicarEj').onclick=()=>{log(c,'plan',`Rutina ${r[di].d}: ${orig} → ${sel} (${s} × ${rep})`);Object.assign(e,{n:sel,s,r:rep});cerrar();renderCliente(c);toast('Rutina actualizada. Se envía así desde mañana.')};
+ };
+ pintar();abrirSheet();
+}
+
+const $=s=>document.querySelector(s);
+const view=$('#view');
+function iniciales(n){return n.split(' ').map(p=>p[0]).slice(0,2).join('')}
+function ring(c){
+ const col=c.adh>=80?'var(--brand)':c.adh>=50?'var(--warn)':'var(--bad)';
+ const r=20,len=2*Math.PI*r,off=len*(1-c.adh/100);
+ return `<div class="ring" aria-label="Cumplimiento ${c.adh}%"><svg viewBox="0 0 46 46"><circle cx="23" cy="23" r="${r}" fill="none" stroke="var(--line)" stroke-width="4"/><circle cx="23" cy="23" r="${r}" fill="none" stroke="${col}" stroke-width="4" stroke-linecap="round" stroke-dasharray="${len}" stroke-dashoffset="${off}"/></svg><span>${iniciales(c.n)}</span></div>`;
+}
+function toast(t){const el=$('#toast');el.textContent=t;el.classList.add('show');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('show'),2400)}
+function cabecera(){return `<header class="top"><div class="coach"><div class="logo">${esc(iniciales(coach.nombre||"C"))}</div><div><small>COME PRO Coach</small><b>${esc(coach.nombre)}</b></div></div><div style="display:flex;gap:8px"><button class="iconbtn" data-ajustes aria-label="Ajustes y WhatsApp de envío"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button><button class="addbtn" data-nuevo aria-label="Añadir cliente">+</button></div></header>`}
+
+function renderHoy(){
+ if(!clientes.length){view.innerHTML=cabecera()+`<h1>Bienvenido, ${esc(coach.nombre.split(' ')[0])}</h1><p class="sub">Aún no tienes clientes. Agrega el primero: COME PRO calcula sus calorías y arma su plan.</p><button class="primary" data-nuevo style="margin-top:16px">Añadir mi primer cliente</button>`;return}
+ const pend=clientes.filter(c=>c.alerta);
+ const bien=clientes.length-pend.length;
+ view.innerHTML=cabecera()+`
+ ${coach.estado!=='conectado'?'<button class="note" data-ajustes style="display:block;width:100%;text-align:left;margin:0 0 14px">Tu WhatsApp de envío no está conectado. Los mensajes no salen hasta que lo conectes. Toca para conectarlo.</button>':''}
+ <h1>${pend.length?pend.length+(pend.length===1?' cliente necesita':' clientes necesitan')+' tu atención':'Todo en orden hoy'}</h1>
+ <p class="sub">${bien} ${bien===1?'va bien':'van bien'} y no requieren nada hoy.</p>
+ <div class="summary"><span class="chip">${clientes.length} ${clientes.length===1?'cliente':'clientes'}</span><span class="chip">Cumplimiento medio ${Math.round(clientes.reduce((a,c)=>a+c.adh,0)/clientes.length)}%</span><span class="chip">${clientes.filter(c=>c.pago!=='Pagado').length} pagos pendientes</span></div>
+ <h2>Para hoy</h2>
+ <div class="list">${pend.map(c=>`
+  <button class="row" data-cli="${c.id}">${ring(c)}
+   <div class="grow"><div class="name">${c.n}</div><span class="tag ${c.alerta.c}">${c.alerta.t}</span><div class="meta">${c.alerta.d}</div></div>
+   <span class="act">${c.alerta.accion}</span></button>`).join('')}</div>
+ <h2>Van bien</h2>
+ <div class="list">${clientes.filter(c=>!c.alerta).map(c=>`
+  <button class="row" data-cli="${c.id}">${ring(c)}<div class="grow"><div class="name">${c.n}</div><div class="meta">Día ${c.dia} de 30 · ${c.adh}% de cumplimiento</div></div></button>`).join('')}</div>`;
+}
+
+function renderClientes(q=''){
+ const tags=['Todos','Reto 30 días','Volumen','Online','Presencial'];
+ const lista=clientes.filter(c=>(filtro==='Todos'||c.tag===filtro)&&c.n.toLowerCase().includes(q.toLowerCase()));
+ view.innerHTML=cabecera()+`<h1>Clientes</h1>
+ <input class="search" id="q" placeholder="Buscar cliente" value="${q}" aria-label="Buscar cliente">
+ <div class="summary" style="margin-top:0">${tags.map(t=>`<button class="chip ${t===filtro?'on':''}" data-filtro="${t}">${t}</button>`).join('')}</div>
+ <h2>${lista.length} ${lista.length===1?'cliente':'clientes'}</h2>
+ <div class="list">${lista.map(c=>`<div class="rowwrap"><button class="row" data-cli="${c.id}">${ring(c)}<div class="grow"><div class="name">${c.n}</div><div class="meta">${c.tag} · Día ${c.dia} de 30</div></div></button>${chatBtn(c)}</div>`).join('')||'<p style="padding:16px" class="sub">No hay clientes con ese filtro. Comparte tu link de registro para sumar clientes.</p>'}</div>
+ <button class="primary" data-nuevo style="margin-top:16px">Añadir cliente</button>`;
+ const q2=$('#q');q2.oninput=e=>{renderClientes(e.target.value);const n=$('#q');n.focus();n.setSelectionRange(n.value.length,n.value.length)};
+}
+
+function grafica(c){
+ if(c.peso.length<2)return '<p class="sub">Aún no hay registros de peso. Se llenan con el check-in semanal.</p>';
+ const w=300,h=90,p=8,vals=[...c.peso,c.meta],min=Math.min(...vals)-1,max=Math.max(...vals)+1;
+ const x=i=>p+i*(w-2*p)/(c.peso.length-1),y=v=>h-p-(v-min)/(max-min)*(h-2*p);
+ const pts=c.peso.map((v,i)=>`${x(i)},${y(v)}`).join(' ');
+ return `<svg viewBox="0 0 ${w} ${h}" width="100%" role="img" aria-label="Peso de ${c.peso[0]} a ${c.peso.at(-1)} kg, meta ${c.meta} kg">
+  <line x1="${p}" x2="${w-p}" y1="${y(c.meta)}" y2="${y(c.meta)}" stroke="var(--muted)" stroke-dasharray="4 4"/>
+  <text x="${w-p}" y="${y(c.meta)-5}" text-anchor="end" font-size="11" fill="var(--muted)">Meta ${c.meta} kg</text>
+  <polyline points="${pts}" fill="none" stroke="var(--brand)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  ${c.peso.map((v,i)=>`<circle cx="${x(i)}" cy="${y(v)}" r="4" fill="var(--brand)"/>`).join('')}</svg>`;
+}
+
+function renderCliente(c){
+ const dif=(c.peso.at(-1)-c.peso[0]).toFixed(1);
+ view.innerHTML=`<button class="back" id="back">‹ Volver</button>
+ <div style="display:flex;gap:12px;align-items:center">${ring(c)}<div class="grow"><h1 style="font-size:24px">${c.n}</h1><div class="meta">${c.obj} · ${c.tag}</div></div>${chatBtn(c)}</div>
+ <div class="stats">
+  <div class="stat"><b>${c.dia}/30</b><small>Día del plan</small></div>
+  <div class="stat"><b>${c.adh}%</b><small>Cumplimiento</small></div>
+  <div class="stat"><b>${dif>0?'+':''}${dif} kg</b><small>Desde el inicio</small></div>
+ </div>
+ ${c.nota?`<div class="note">${c.nota}</div>`:''}
+ ${c.alerta&&c.alerta.t==='Pidió un cambio'?`<div class="card" style="margin-top:12px;border-color:var(--warn)"><b>${c.n.split(' ')[0]} escribió por WhatsApp:</b><p class="sub">${c.alerta.d}. Toca el atún en la cena para cambiarlo.</p></div>`:''}
+ ${panelDatos(c)}
+ ${waCard(c)}
+ ${c.alerta&&c.alerta.t==='Revisar plan'?'<div class="card" style="margin-top:14px;border-color:var(--bad)"><b>Plan en revisión</b><p class="sub">Indicó una condición de salud. Revisa calorías y alimentos abajo y apruébalo para que empiecen los envíos.</p><button class="primary" id="aprobar">Aprobar plan</button></div>':''}
+ <h2>Progreso de peso</h2><div class="card">${grafica(c)}</div>
+ <h2>Respuestas diarias</h2><div class="card"><div class="days">${[...c.hist].map(d=>`<i class="${d}"></i>`).join('')}${'<i></i>'.repeat(30-c.hist.length)}</div><p class="hint">Verde: respondió "Hecho". Rojo: no respondió.</p></div>
+ <h2>Plan del cliente</h2>${panelPlan(c)}${panelRutina(c)}${panelHist(c)}
+ <h2>Último check-in</h2><div class="card"><div class="ck">
+  <div><small>Sueño</small>${c.ck.sueno}</div><div><small>Hambre</small>${c.ck.hambre}</div>
+  <div><small>Energía</small>${c.ck.energia}</div><div><small>Cumplimiento</small>${c.ck.cumple}</div></div></div>
+ <h2>Plan y pago</h2><button class="card cobro" id="editPrecio"><div class="grow"><div class="meta">${tipoDe(c).n}${c.monto!==tipoDe(c).p?' · precio especial':''}</div><b style="font-size:18px">RD$${fmt(c.monto)}/mes</b><div class="meta">Vence el ${c.vence}</div></div><div style="text-align:right"><span class="tag ${c.pago==='Pagado'?'t-ok':'t-bad'}">${c.pago}</span><div class="act" style="margin-top:8px">Cambiar</div></div></button>
+ ${c.pago!=='Pagado'?`<a class="ghost" style="margin-top:8px" target="_blank" rel="noopener" href="https://wa.me/${waNum(c.wa)}?text=${encodeURIComponent(`Hola ${c.n.split(' ')[0]}, te recuerdo que tu plan de RD$${fmt(c.monto)} vence el ${c.vence}. ¡Gracias!`)}">Enviar recordatorio de pago</a>`:''}
+ <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px">
+  <button class="primary" style="background:var(--surface);color:var(--ink);border:1px solid var(--line)" id="pausa">${c.waEstado==='pausado'?'Reanudar envíos':'Pausar envíos'}</button>
+  <button class="primary" style="background:var(--bad-soft);color:var(--bad)" id="sacar">Sacar del sistema</button></div>`;
+ $('#back').onclick=()=>{actual=null;render()};
+ view.querySelectorAll('.food').forEach(b=>b.onclick=()=>abrirCambio(c,b.dataset.k,b.dataset.f,b.dataset.o));
+ view.querySelectorAll('[data-dia]').forEach(b=>b.onclick=()=>{diaSel=+b.dataset.dia;renderCliente(c)});
+ view.querySelectorAll('details.panel').forEach(d=>d.addEventListener('toggle',()=>{abierto[d.dataset.p]=d.open}));
+ view.querySelectorAll('[data-ex]').forEach(b=>b.onclick=()=>{const [di,ei]=b.dataset.ex.split('-').map(Number);abrirEjercicio(c,di,ei)});
+ $('#editPrecio').onclick=()=>abrirPrecio(c);
+ $('#editDatos').onclick=()=>abrirDatos(c);
+ view.querySelectorAll('[data-hf]').forEach(b=>b.onclick=()=>{histFiltro=b.dataset.hf;renderCliente(c)});
+ $('#swRutina').onclick=()=>{enviaRutina[c.id]=enviaRutina[c.id]===false;log(c,'whatsapp',enviaRutina[c.id]!==false?'Envío de rutina activado':'Envío de rutina desactivado');renderCliente(c);toast(enviaRutina[c.id]!==false?'La rutina se enviará por WhatsApp':'Rutina desactivada: solo recibe la alimentación')};
+ $('#pausa').onclick=()=>{if(c.waEstado==='pendiente'){toast('Primero el cliente debe activar su WhatsApp');return}c.waEstado=c.waEstado==='pausado'?'activo':'pausado';log(c,'whatsapp',c.waEstado==='pausado'?'Envíos pausados':'Envíos reanudados');renderCliente(c);toast(c.waEstado==='pausado'?'Envíos pausados':'Envíos reanudados')};
+ $('#cambiarNum').onclick=()=>abrirNumero(c);
+ const sim=$('#simular');if(sim)sim.onclick=()=>{log(c,'whatsapp',`WhatsApp activado: ${fmtTel(c.wa)}`);c.waEstado='activo';if(c.alerta&&c.alerta.t==='Esperando activación')c.alerta=null;renderCliente(c);toast('Activado: se enviaron la bienvenida y la lista de compras')};
+ const apr=$('#aprobar');if(apr)apr.onclick=()=>{log(c,'plan','Plan aprobado por el entrenador');c.alerta=c.waEstado==='pendiente'?{t:'Esperando activación',d:'Aún no envía "Empezar" por WhatsApp',c:'t-warn',accion:'Reenviar'}:null;renderCliente(c);toast('Plan aprobado')};
+ $('#sacar').onclick=async()=>{if(!confirm(`¿Sacar a ${c.n} del sistema? Se borran sus datos, su plan y sus mensajes. No se puede deshacer.`))return;const {error}=await sb.from('clientes').delete().eq('id',c.id);if(error){toast('No se pudo borrar: '+error.message);return}clientes.splice(clientes.indexOf(c),1);actual=null;render();toast('Cliente eliminado')};
+}
+
+function abrirCambio(c,k,f,orig){
+ const clave=Object.keys(sustitutos).find(s=>f.toLowerCase().includes(s));
+ const ops=clave?sustitutos[clave]:generico;
+ let alcance='hoy',elegido=null;
+ const sh=$('#sheet');
+ const pintar=()=>{sh.innerHTML=`<h3>Cambiar ${f}</h3><p class="sub">La lista de compras y las calorías se ajustan solas.</p>
+  <div class="seg">${[['hoy','Solo hoy'],['plan','Todo el plan'],['nunca','No le gusta']].map(([v,t])=>`<button data-a="${v}" class="${alcance===v?'on':''}">${t}</button>`).join('')}</div>
+  ${ops.map((o,i)=>`<button class="opt ${elegido===i?'on':''}" data-o="${i}"><span><b>${o[0]}</b><small>${o[1]}</small></span><span>${elegido===i?'✓':''}</span></button>`).join('')}
+  <button class="primary" id="aplicar" ${elegido===null?'disabled':''}>Aplicar cambio</button>`;
+  sh.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{alcance=b.dataset.a;pintar()});
+  sh.querySelectorAll('[data-o]').forEach(b=>b.onclick=()=>{elegido=+b.dataset.o;pintar()});
+  $('#aplicar').onclick=()=>{
+   const a=aj(c.id),nuevo=ops[elegido][0];
+   if(alcance==='hoy')a.dia[k]=nuevo;else a.plan[orig]=nuevo;
+   if(alcance==='nunca'&&clave&&!a.excl.includes(clave))a.excl.push(clave);
+   log(c,'plan',alcance==='hoy'?`Día ${k.split('-')[0]}: ${f} → ${nuevo}`:alcance==='plan'?`Todo el plan: ${orig} → ${nuevo}`:`No le gusta: ${orig}. Reemplazado por ${nuevo}`);
+   if(c.alerta&&c.alerta.t==='Pidió un cambio')c.alerta=null;
+   cerrar();renderCliente(c);
+   toast(alcance==='hoy'?'Cambiado solo para hoy':alcance==='plan'?'Cambiado en los 30 días. Lista de compras actualizada.':'Excluido para siempre. Lista de compras actualizada.');
+  };
+ };
+ pintar();$('#sheetBg').style.display='block';requestAnimationFrame(()=>sh.classList.add('open'));
+}
+function cerrar(){$('#sheet').classList.remove('open');$('#sheetBg').style.display='none'}
+$('#sheetBg').onclick=cerrar;
+
+function renderPlantillas(){
+ const pl=[['Pérdida de grasa · principiante','4 días de gym · 1,600–1,900 kcal',3],['Volumen limpio','5 días de gym · superávit moderado',2],['Mantenimiento online','3 días en casa · sin equipo',1]];
+ view.innerHTML=cabecera()+`<h1>Plantillas</h1><p class="sub">Tus programas base. COME PRO genera el plan y tú solo ajustas.</p>
+ <h2>${pl.length} plantillas</h2><div class="list">${pl.map(p=>`<button class="row"><div class="grow"><div class="name">${p[0]}</div><div class="meta">${p[1]}</div></div><span class="tag t-ok">${p[2]} ${p[2]===1?'cliente':'clientes'}</span></button>`).join('')}</div>
+ <button class="primary" style="margin-top:16px" id="nueva">Crear plantilla</button>`;
+ $('#nueva').onclick=()=>toast('Aquí se abriría el creador de plantillas');
+}
+
+function renderCobros(){
+ const total=clientes.reduce((a,c)=>a+c.monto,0),cobrado=clientes.filter(c=>c.pago==='Pagado').reduce((a,c)=>a+c.monto,0);
+ view.innerHTML=cabecera()+`<h1>Cobros de octubre</h1>
+ <div class="card" style="margin-top:14px"><div style="display:flex;justify-content:space-between"><b>RD$${cobrado.toLocaleString('es-DO')} cobrados</b><span class="meta">de RD$${total.toLocaleString('es-DO')}</span></div><div class="bar"><i style="width:${total?cobrado/total*100:0}%"></i></div></div>
+ <h2>Tus tipos de plan</h2><div class="list">${tiposPlan.map(t=>{const n=clientes.filter(c=>planCli[c.id]===t.id).length;return `<button class="row" data-tipo="${t.id}"><div class="grow"><div class="name">${t.n}</div><div class="meta">${n} ${n===1?'cliente':'clientes'} · toca para cambiar el precio</div></div><b>RD$${fmt(t.p)}</b></button>`}).join('')}</div>
+ <h2>Pagos</h2><div class="list">${[...clientes].sort((a,b)=>(a.pago==='Pendiente'?-1:1)).map(c=>`<button class="row" data-cli="${c.id}"><div class="grow"><div class="name">${c.n}</div><div class="meta">${tipoDe(c).n} · RD$${fmt(c.monto)} · vence el ${c.vence}</div></div><span class="tag ${c.pago==='Pagado'?'t-ok':'t-bad'}">${c.pago}</span></button>`).join('')}</div>`;
+}
+
+function render(){
+ if(actual){renderCliente(actual);return}
+ ({hoy:renderHoy,clientes:renderClientes,plantillas:renderPlantillas,cobros:renderCobros,envios:renderEnvios})[tab]();
+ window.scrollTo(0,0);
+}
+view.addEventListener('click',e=>{
+ const r=e.target.closest('[data-cli]');if(r){actual=clientes.find(c=>c.id==r.dataset.cli);diaSel=actual.dia;renderCliente(actual);window.scrollTo(0,0);return}
+ const aj2=e.target.closest('[data-ajustes]');if(aj2){actual=null;renderAjustes();window.scrollTo(0,0);return}
+ const nv=e.target.closest('[data-nuevo]');if(nv){actual=null;renderNuevo();window.scrollTo(0,0);return}
+ const tp=e.target.closest('[data-tipo]');if(tp){abrirTipo(tp.dataset.tipo);return}
+ const f=e.target.closest('[data-filtro]');if(f){filtro=f.dataset.filtro;renderClientes($('#q')?.value||'')}
+});
+document.querySelectorAll('nav.tabs button').forEach(b=>b.onclick=()=>{
+ tab=b.dataset.tab;actual=null;document.querySelectorAll('nav.tabs button').forEach(x=>x.classList.toggle('on',x===b));render();
+});
+/* ===== Supabase: carga, guardado y acceso ===== */
+const objLbl2={grasa:'Pérdida de grasa',musculo:'Ganar músculo',mant:'Mantenimiento'};
+function filaDe(c,planTipo,rutina,plan){
+ return {entrenador_id:yo.id,nombre:c.n,whatsapp:c.wa,codigo:c.codigo,
+  estado:c.alerta&&c.alerta.t==='Revisar plan'?'revision':c.waEstado,
+  plan_tipo:planTipo,envia_rutina:rutina,
+  datos:{...c.datos,obj:c.obj,tag:c.tag,meta:c.meta,monto:c.monto,pago:c.pago,vence:c.vence,nota:c.nota,pesos:c.peso,nutri:plan||nutri[c.id],historial:(historial[c.id]||[]).slice(0,100)}};
+}
+const timers={};
+function programarGuardado(c){
+ if(!yo||typeof c.id!=='string')return;
+ clearTimeout(timers[c.id]);
+ timers[c.id]=setTimeout(async()=>{
+  const f=filaDe(c,planCli[c.id],enviaRutina[c.id]!==false);delete f.entrenador_id;delete f.codigo;
+  const {error}=await sb.from('clientes').update(f).eq('id',c.id);
+  if(error)toast('No se guardó el cambio: '+error.message);
+  if(nutri[c.id])sb.from('planes').upsert({cliente_id:c.id,kcal:nutri[c.id].kcal,dias:[]}).then(()=>{});
+ },500);
+}
+function clienteDe(r){
+ const d=r.datos||{},seg=(r.seguimiento||[]).sort((a,b)=>a.fecha<b.fecha?-1:1);
+ const pesosSeg=seg.filter(x=>x.peso!=null).map(x=>+x.peso);
+ const peso=pesosSeg.length?pesosSeg:(d.pesos&&d.pesos.length?d.pesos:[d.peso||70]);
+ const marcados=seg.filter(x=>x.hecho!=null),hist=marcados.map(x=>x.hecho?'y':'n').join('');
+ const inicio=r.fecha_inicio?new Date(r.fecha_inicio+'T12:00'):new Date(r.creado);
+ const dia=Math.min(30,Math.max(1,r.dia_actual||Math.floor((Date.now()-inicio)/864e5)+1));
+ let alerta=null;const sinResp=r.ultima_respuesta?(Date.now()-new Date(r.ultima_respuesta))/864e5:0;
+ if(r.estado==='revision')alerta={t:'Revisar plan',d:'Indicó una condición de salud',c:'t-bad',accion:'Revisar'};
+ else if(r.estado==='pendiente')alerta={t:'Esperando activación',d:'Aún no envía "Empezar" por WhatsApp',c:'t-warn',accion:'Reenviar'};
+ else if(r.estado==='activo'&&sinResp>=3)alerta={t:Math.floor(sinResp)+' días sin responder',d:'Última respuesta: '+new Date(r.ultima_respuesta).toLocaleDateString('es-DO',{weekday:'long'}),c:'t-bad',accion:'Escribir'};
+ const tipo=tiposPlan.find(t=>t.id===r.plan_tipo)||tiposPlan[1];
+ const c={id:r.id,n:r.nombre,obj:d.obj||objLbl2.grasa,tag:d.tag||(tipo.id==='pres'?'Presencial':'Online'),dia,
+  adh:marcados.length?Math.round(marcados.filter(x=>x.hecho).length/marcados.length*100):100,
+  peso,meta:d.meta||peso[0],pago:d.pago||'Pendiente',vence:d.vence||'—',monto:d.monto||tipo.p,nota:d.nota||'',alerta,hist,
+  ck:{sueno:'—',hambre:'—',energia:'—',cumple:marcados.length?Math.round(marcados.filter(x=>x.hecho).length/marcados.length*100)+'%':'—'},
+  wa:r.whatsapp,waEstado:r.estado==='revision'?'pendiente':r.estado,codigo:r.codigo,
+  datos:{sexo:d.sexo||'m',edad:d.edad||30,altura:d.altura||165,act:d.act||'mod',dias:d.dias||'3',cond:d.cond||'ninguna',no:d.no||''},
+  inicio:inicio.toLocaleDateString('es-DO',{day:'numeric',month:'short'}),usados:r.mensajes_usados||[]};
+ planCli[c.id]=tipo.id;enviaRutina[c.id]=r.envia_rutina!==false;
+ const objK={'Pérdida de grasa':'grasa','Ganar músculo':'musculo','Mantenimiento':'mant'}[c.obj]||'grasa';
+ nutri[c.id]=d.nutri||ComeProMotor.generarPlan({...c.datos,peso:peso.at(-1),obj:objK});
+ historial[c.id]=d.historial||[];
+ return c;
+}
+async function cargarTodo(){
+ view.innerHTML='<p class="sub" style="padding:40px 0;text-align:center">Cargando…</p>';
+ const {data:e,error:e1}=await sb.from('entrenadores').select('*').eq('id',yo.id).maybeSingle();
+ if(e1||!e){view.innerHTML='<h1>Cuenta sin perfil</h1><p class="sub">Este usuario no está registrado como entrenador en la tabla <b>entrenadores</b>.</p><button class="primary" id="salir2" style="margin-top:16px">Cerrar sesión</button>';$('#salir2').onclick=async()=>{await sb.auth.signOut();location.reload()};return}
+ coach.nombre=e.nombre;coach.slug=e.slug;coach.wa=e.wa_numero||'';coach.estado=e.wa_numero?'conectado':'sin';
+ const {data,error}=await sb.from('clientes').select('*,seguimiento(fecha,hecho,peso)').order('creado');
+ if(error){view.innerHTML='<h1>No se pudo cargar</h1><p class="sub">'+esc(error.message)+'</p>';return}
+ clientes.length=0;data.forEach(r=>clientes.push(clienteDe(r)));
+ document.querySelector('nav.tabs').style.display='';
+ render();
+}
+function pantallaLogin(msg){
+ document.querySelector('nav.tabs').style.display='none';
+ view.innerHTML=`<div style="max-width:380px;margin:12vh auto 0"><div class="logo" style="width:52px;height:52px;font-size:20px">CP</div>
+ <h1 style="margin-top:16px">COME PRO Coach</h1><p class="sub">Entra con tu cuenta de entrenador.</p>
+ <label class="lbl" for="lEmail">Correo</label><input class="search" id="lEmail" type="email" autocomplete="email" style="margin:6px 0 0">
+ <label class="lbl" for="lPass">Contraseña</label><input class="search" id="lPass" type="password" autocomplete="current-password" style="margin:6px 0 0">
+ <p class="hint err" id="lErr" ${msg?'':'hidden'}>${msg||''}</p>
+ <button class="primary" id="lBtn" style="margin-top:16px">Entrar</button>
+ <button class="linkbtn" id="lOlvido" style="display:block;margin:14px auto 0">Olvidé mi contraseña</button></div>`;
+ const err=t=>{$('#lErr').textContent=t;$('#lErr').hidden=false};
+ view.querySelectorAll('input').forEach(i=>i.oninput=()=>$('#lErr').hidden=true);
+ $('#lBtn').onclick=async()=>{const email=$('#lEmail').value.trim(),password=$('#lPass').value;
+  if(!email||!password){err('Escribe tu correo y tu contraseña.');return}
+  const b=$('#lBtn');b.disabled=true;b.textContent='Entrando…';
+  const {data,error}=await sb.auth.signInWithPassword({email,password});
+  if(error){b.disabled=false;b.textContent='Entrar';err(error.message==='Invalid login credentials'?'Correo o contraseña incorrectos.':error.message);return}
+  yo=data.user;cargarTodo()};
+ $('#lPass').onkeydown=e=>{if(e.key==='Enter')$('#lBtn').click()};
+ $('#lOlvido').onclick=async()=>{const email=$('#lEmail').value.trim();if(!email){err('Escribe tu correo arriba y vuelve a tocar aquí.');return}
+  const {error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname});
+  toast(error?'No se pudo enviar: '+error.message:'Te enviamos un correo para cambiar la contraseña')};
+}
+sb.auth.onAuthStateChange((ev,ses)=>{
+ if(ev==='PASSWORD_RECOVERY'){const p=prompt('Escribe tu nueva contraseña (mínimo 8 caracteres)');if(p&&p.length>=8)sb.auth.updateUser({password:p}).then(({error})=>toast(error?error.message:'Contraseña cambiada'))}
+});
+(async()=>{
+ if(SUPABASE_KEY.startsWith('PEGA_')){document.querySelector('nav.tabs').style.display='none';view.innerHTML='<h1>Falta la clave</h1><p class="sub">Pega la Publishable key de Supabase en la línea <b>SUPABASE_KEY</b> de este archivo.</p>';return}
+ const {data}=await sb.auth.getSession();
+ if(data.session){yo=data.session.user;cargarTodo()}else pantallaLogin();
+})();
+</script>
+</body>
+</html>
