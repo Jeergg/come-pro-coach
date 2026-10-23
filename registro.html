@@ -104,7 +104,7 @@ function pintar(error){
   <p class="ayuda">Si no hay ninguno, déjalo en blanco.</p>
   <span class="lbl">¿Tienes alguna condición de salud?</span>${opciones('cond',[['ninguna','Ninguna'],['diabetes','Diabetes'],['hta','Presión alta'],['embarazo','Embarazo o lactancia'],['otra','Otra']])}
   <p class="ayuda">Tu entrenador lo revisa antes de enviarte el plan.</p>
-  <label class="acepto"><input type="checkbox" id="acepto" ${d.acepto?'checked':''}><span>Acepto que ${primer(entrenador)} y COME PRO guarden estos datos para crear mi plan y que me escriban por WhatsApp. Puedo pedir que borren mis datos cuando quiera.</span></label>`;
+  <label class="acepto"><input type="checkbox" id="acepto" ${d.acepto?'checked':''}><span>Acepto que ${primer(entrenador)} y COME PRO guarden estos datos para crear mi plan y que me escriban por WhatsApp. Puedo pedir que borren mis datos cuando quiera. Leí la <a href="privacidad.html" target="_blank" rel="noopener">Política de privacidad</a> y los <a href="terminos.html" target="_blank" rel="noopener">Términos</a>.</span></label>`;
  app.innerHTML=cabeza()+cuerpo+(error?`<p class="error" role="alert">${esc(error)}</p>`:'')+
   `<div class="botones" style="${paso===1?'grid-template-columns:1fr':''}">${paso>1?'<button type="button" class="btn sec" id="atras">Atrás</button>':''}<button type="button" class="btn" id="seguir">${paso<3?'Continuar':'Enviar mis datos'}</button></div>`;
  app.querySelectorAll('.ops').forEach(g=>g.querySelectorAll('button').forEach(b=>b.onclick=()=>{d[g.dataset.campo]=b.dataset.v;g.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b))}));
