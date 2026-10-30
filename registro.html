@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tu plan · COME PRO Coach</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+ --bg:#f4f5f3;--surface:#fff;--soft:#f4f8ef;--ink:#171a1d;--muted:#6b7379;--line:#e2e6e1;
+ --brand:#69b91f;--brand-text:#4f8d14;--on-brand:#0f1f08;--bad:#c94848;--bad-soft:#fbe6e6;
+ color-scheme:light;box-sizing:border-box;
+ padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+ --bg:#05070a;--surface:#0d120e;--soft:#16240f;--ink:#f5f8f1;--muted:#aab4a6;--line:#273127;
+ --brand:#9be83f;--brand-text:#9be83f;--bad:#ef7a7a;--bad-soft:#2e1414;color-scheme:dark}}
+*,*::before,*::after{box-sizing:inherit}
+html{height:100%}
+body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font:16px/1.5 "Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-text-size-adjust:100%}
+main{max-width:460px;margin:0 auto;padding:28px 20px 40px}
+.marca{display:flex;align-items:center;gap:10px;font-weight:700;font-size:14px;color:var(--muted)}
+.marca i{width:30px;height:30px;border-radius:50%;background:var(--brand);color:var(--on-brand);display:grid;place-items:center;font-style:normal;font-weight:800;font-size:12px}
+h1{font-size:30px;line-height:1.15;letter-spacing:-.02em;margin:22px 0 8px;font-weight:800}
+.sub{color:var(--muted);margin:0}
+.pasos{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:24px 0 6px}
+.pasos span{height:5px;border-radius:5px;background:var(--line);transition:background .25s}
+.pasos span.on{background:var(--brand)}
+.paso-txt{font-size:13px;color:var(--muted);font-weight:600;margin-bottom:6px}
+label,.lbl{display:block;font-weight:700;font-size:15px;margin:18px 0 7px}
+input[type=text],input[type=tel],input[type=number]{width:100%;font:inherit;font-size:17px;padding:13px 14px;border-radius:14px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+input:focus-visible,button:focus-visible{outline:3px solid var(--brand);outline-offset:2px}
+.ayuda{font-size:13px;color:var(--muted);margin:6px 0 0}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.grid3 label{margin-top:18px}
+.ops{display:grid;gap:8px}
+.ops.fila{grid-auto-flow:column;grid-auto-columns:1fr}
+.ops button{font:inherit;font-weight:600;font-size:15px;padding:12px 10px;border-radius:14px;border:1px solid var(--line);background:var(--surface);color:var(--ink);text-align:left;cursor:pointer}
+.ops.fila button{text-align:center}
+.ops button small{display:block;font-weight:500;color:var(--muted);font-size:13px}
+.ops button[aria-pressed=true]{border-color:var(--brand);background:var(--soft);box-shadow:inset 0 0 0 1px var(--brand)}
+.acepto{display:flex;gap:12px;align-items:flex-start;margin-top:22px;padding:14px;border-radius:14px;background:var(--surface);border:1px solid var(--line);font-weight:500;font-size:14px;cursor:pointer}
+.acepto input{width:22px;height:22px;margin:1px 0 0;flex:none;accent-color:var(--brand)}
+.error{margin:16px 0 0;padding:12px 14px;border-radius:12px;background:var(--bad-soft);color:var(--bad);font-weight:600;font-size:14px}
+.botones{display:grid;grid-template-columns:auto 1fr;gap:10px;margin-top:26px}
+.btn{font:inherit;font-weight:800;font-size:16px;padding:15px 20px;border-radius:999px;border:0;background:var(--brand);color:var(--on-brand);cursor:pointer;text-align:center;text-decoration:none;display:block}
+.btn.sec{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn:disabled{opacity:.6}
+.oculto{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.listo{text-align:left}
+.listo .check{width:64px;height:64px;border-radius:50%;background:var(--brand);color:var(--on-brand);display:grid;place-items:center;margin-top:30px}
+.caja{margin-top:20px;padding:16px;border-radius:16px;background:var(--surface);border:1px solid var(--line)}
+.codigo{font-size:22px;font-weight:800;letter-spacing:.02em;margin-top:4px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<main id="app"><p class="sub" style="padding-top:30vh;text-align:center">Cargando…</p></main>
+<script>
+const WORKER='https://come-pro-coach.el-0a6.workers.dev';
+const slug=(new URLSearchParams(location.search).get('e')||'').toLowerCase();
+const app=document.getElementById('app');
+const d={sexo:'',obj:'',act:'',dias:'',cond:''};
+let paso=1,entrenador='';
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const primer=n=>esc((n||'').split(' ')[0]);
+
+function opciones(campo,ops,fila){
+ return `<div class="ops ${fila?'fila':''}" role="group" data-campo="${campo}">${ops.map(([v,t,s])=>`<button type="button" data-v="${v}" aria-pressed="${d[campo]===v}">${t}${s?`<small>${s}</small>`:''}</button>`).join('')}</div>`;
+}
+function cabeza(){
+ return `<div class="marca"><i>CP</i>COME PRO Coach</div>
+ <h1>${primer(entrenador)} va a armar tu plan</h1>
+ <p class="sub">Responde unas preguntas. Toma unos 2 minutos.</p>
+ <div class="pasos" aria-hidden="true">${[1,2,3].map(n=>`<span class="${n<=paso?'on':''}"></span>`).join('')}</div>
+ <div class="paso-txt">Paso ${paso} de 3</div>`;
+}
+function guardarCampos(){
+ app.querySelectorAll('input[id]').forEach(i=>{d[i.id]=i.type==='checkbox'?i.checked:i.value});
+}
+function pintar(error){
+ let cuerpo='';
+ if(paso===1)cuerpo=`
+  <label for="nombre">Tu nombre</label><input type="text" id="nombre" autocomplete="name" value="${esc(d.nombre||'')}">
+  <label for="whatsapp">Tu teléfono (WhatsApp)</label><input type="tel" id="whatsapp" inputmode="tel" autocomplete="tel" placeholder="809 555 0142" value="${esc(d.whatsapp||'')}">
+  <p class="ayuda">Usa el mismo número que tienes en Telegram: así el bot te encuentra.</p>
+  <label for="telegram">Tu usuario de Telegram <span style="font-weight:400">(opcional)</span></label><input type="text" id="telegram" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="@tu_usuario" value="${esc(d.telegram||'')}">
+  <p class="ayuda">Lo ves en Telegram → Ajustes, debajo de tu nombre (empieza con @). Si no tienes, déjalo vacío.</p>
+  <span class="lbl">Sexo</span>${opciones('sexo',[['m','Mujer'],['h','Hombre']],true)}
+  <div class="oculto" aria-hidden="true"><input type="text" id="web" tabindex="-1" autocomplete="off"></div>`;
+ if(paso===2)cuerpo=`
+  <div class="grid3">
+   <div><label for="edad">Edad</label><input type="number" id="edad" inputmode="numeric" value="${esc(d.edad||'')}"></div>
+   <div><label for="peso">Peso (kg)</label><input type="number" id="peso" inputmode="decimal" step="0.1" value="${esc(d.peso||'')}"></div>
+   <div><label for="altura">Altura (cm)</label><input type="number" id="altura" inputmode="numeric" value="${esc(d.altura||'')}"></div>
+  </div>
+  <p class="ayuda">Si sabes tu peso en libras, divídelo entre 2.2.</p>
+  <span class="lbl">¿Qué quieres lograr?</span>${opciones('obj',[['grasa','Perder grasa'],['musculo','Ganar músculo'],['mant','Mantenerme y comer mejor']])}
+  <span class="lbl">¿Cómo es tu día fuera del gym?</span>${opciones('act',[['sed','Paso sentado casi todo el día'],['lig','Camino un poco'],['mod','Me muevo bastante'],['alt','Trabajo de pie o con esfuerzo físico']])}
+  <span class="lbl">¿Cuántos días puedes entrenar por semana?</span>${opciones('dias',[['2','2'],['3','3'],['4','4'],['5','5']],true)}`;
+ if(paso===3)cuerpo=`
+  <label for="no">¿Qué alimentos no comes o te caen mal?</label><input type="text" id="no" placeholder="Ej.: atún, maní, leche" value="${esc(d.no||'')}">
+  <p class="ayuda">Si no hay ninguno, déjalo en blanco.</p>
+  <span class="lbl">¿Tienes alguna condición de salud?</span>${opciones('cond',[['ninguna','Ninguna'],['diabetes','Diabetes'],['hta','Presión alta'],['embarazo','Embarazo o lactancia'],['otra','Otra']])}
+  <p class="ayuda">Tu entrenador lo revisa antes de enviarte el plan.</p>
+  <label class="acepto"><input type="checkbox" id="acepto" ${d.acepto?'checked':''}><span>Acepto que ${primer(entrenador)} y COME PRO guarden estos datos para crear mi plan y que me escriban por Telegram y WhatsApp. Puedo pedir que borren mis datos cuando quiera. Leí la <a href="privacidad.html" target="_blank" rel="noopener">Política de privacidad</a> y los <a href="terminos.html" target="_blank" rel="noopener">Términos</a>.</span></label>`;
+ app.innerHTML=cabeza()+cuerpo+(error?`<p class="error" role="alert">${esc(error)}</p>`:'')+
+  `<div class="botones" style="${paso===1?'grid-template-columns:1fr':''}">${paso>1?'<button type="button" class="btn sec" id="atras">Atrás</button>':''}<button type="button" class="btn" id="seguir">${paso<3?'Continuar':'Enviar mis datos'}</button></div>`;
+ app.querySelectorAll('.ops').forEach(g=>g.querySelectorAll('button').forEach(b=>b.onclick=()=>{d[g.dataset.campo]=b.dataset.v;g.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b))}));
+ const atras=document.getElementById('atras');if(atras)atras.onclick=()=>{guardarCampos();paso--;pintar();scrollTo(0,0)};
+ document.getElementById('seguir').onclick=seguir;
+ if(error)app.querySelector('.error').scrollIntoView({block:'center'});
+}
+function validar(){
+ const tel=String(d.whatsapp||'').replace(/\D/g,'');
+ if(paso===1){
+  if(String(d.nombre||'').trim().length<2)return 'Escribe tu nombre.';
+  if(!(tel.length===10||(tel.length>=11&&tel.length<=15)))return 'Escribe tu teléfono con 10 dígitos, por ejemplo 809 555 0142.';
+  const tg=String(d.telegram||'').trim().replace(/^@/,'').replace(/^https?:\/\/t\.me\//i,'');
+  if(tg&&!/^[A-Za-z][A-Za-z0-9_]{4,31}$/.test(tg))return 'Revisa tu usuario de Telegram: solo letras, números y guion bajo, mínimo 5 caracteres (por ejemplo @ana_perez).';
+  if(!d.sexo)return 'Elige si eres mujer u hombre.';
+ }
+ if(paso===2){
+  const e=+d.edad,p=+d.peso,a=+d.altura;
+  if(!(e>=16&&e<=90))return 'Escribe una edad entre 16 y 90 años.';
+  if(!(p>=35&&p<=250))return 'Escribe tu peso en kilos, entre 35 y 250.';
+  if(!(a>=130&&a<=220))return 'Escribe tu altura en centímetros, entre 130 y 220.';
+  if(!d.obj)return 'Elige qué quieres lograr.';
+  if(!d.act)return 'Elige cómo es tu día fuera del gym.';
+  if(!d.dias)return 'Elige cuántos días puedes entrenar.';
+ }
+ if(paso===3){
+  if(!d.cond)return 'Indica si tienes alguna condición de salud.';
+  if(!d.acepto)return 'Marca la casilla para aceptar y continuar.';
+ }
+ return '';
+}
+async function seguir(){
+ guardarCampos();
+ const err=validar();if(err){pintar(err);return}
+ if(paso<3){paso++;pintar();scrollTo(0,0);return}
+ const b=document.getElementById('seguir');b.disabled=true;b.textContent='Enviando…';
+ try{
+  const r=await fetch(WORKER+'/registro',{method:'POST',headers:{'Content-Type':'application/json'},
+   body:JSON.stringify({e:slug,nombre:d.nombre,whatsapp:d.whatsapp,telegram:String(d.telegram||'').trim(),sexo:d.sexo,edad:+d.edad,peso:+d.peso,altura:+d.altura,obj:d.obj,act:d.act,dias:d.dias,no:d.no||'',cond:d.cond,acepto:d.acepto===true,web:d.web||''})});
+  const j=await r.json();
+  if(!r.ok){pintar(j.error||'No se pudo enviar. Intenta otra vez.');return}
+  listo(j);
+ }catch(e){pintar('No hay conexión. Revisa tu internet y vuelve a tocar Enviar mis datos.')}
+}
+function listo(j){
+ const n=primer(d.nombre),ent=primer(j.entrenador||entrenador);
+ const tg=j.tg&&/^https:\/\/t\.me\//.test(j.tg)?j.tg:'';
+ app.innerHTML=`<div class="listo"><div class="marca"><i>CP</i>COME PRO Coach</div>
+ <div class="check" aria-hidden="true"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
+ <h1>Listo, ${n}</h1>
+ <p class="sub">${ent} recibió tus datos y va a revisar tu plan antes de enviártelo.</p>
+ ${tg?`<div class="caja"><b>Último paso: abre Telegram</b><p class="sub" style="margin-top:4px">Toca el botón y luego <b>Iniciar</b>. Ahí te llegan tu plan, tu rutina y tu lista de compras.</p><a class="btn" style="margin-top:14px" href="${esc(tg)}">Abrir mi plan en Telegram</a><p class="ayuda" style="margin-top:10px">También puedes buscar <b>@${esc(tg.split('/').pop().split('?')[0])}</b> en Telegram y tocar <b>Iniciar</b>: te encuentra por tu número o tu usuario. ¿No tienes Telegram? Descárgalo gratis desde la App Store o Google Play.</p></div>`
+ :`<div class="caja"><b>¿Qué sigue?</b><p class="sub" style="margin-top:4px">${ent} te va a enviar el link para recibir tu plan por Telegram. Guarda este código por si te lo pide:</p><div class="codigo">${esc(j.codigo)}</div></div>`}
+ </div>`;
+ scrollTo(0,0);
+}
+(async()=>{
+ if(!slug){app.innerHTML='<h1>Link incompleto</h1><p class="sub">Pídele a tu entrenador el link completo para registrarte.</p>';return}
+ try{
+  const r=await fetch(WORKER+'/registro?e='+encodeURIComponent(slug)),j=await r.json();
+  if(!r.ok){app.innerHTML=`<h1>Link no válido</h1><p class="sub">${esc(j.error)}</p>`;return}
+  entrenador=j.nombre;document.title=`Tu plan con ${entrenador.split(' ')[0]} · COME PRO Coach`;pintar();
+ }catch(e){app.innerHTML='<h1>Sin conexión</h1><p class="sub">Revisa tu internet y recarga la página.</p>'}
+})();
+</script>
+</body>
+</html>
